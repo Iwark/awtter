@@ -1,0 +1,41 @@
+.accounts-form
+  = render 'errors/form_error', obj: @account
+  = form_for @account, html: { class: 'form-horizontal post-form' } do |f|
+    .form-group.mt10
+      - Group.all.each do |group|
+        .radio
+          label
+            = f.radio_button :group_id, group.id, class: 'form-control'
+            .name= group.name
+    .form-group.mt10
+      .col-sm-3
+        = f.label :name, class: 'control-label'
+      .col-sm-9
+        = f.text_field :name, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :api_key, class: 'control-label'
+      .col-sm-9
+        = f.text_field :api_key, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :api_secret, class: 'control-label'
+      .col-sm-9
+        = f.text_field :api_secret, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :access_token, class: 'control-label'
+      .col-sm-9
+        = f.text_field :access_token_secret, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :target, class: 'control-label'
+      .col-sm-9
+        = f.text_field :target, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :description, class: 'control-label'
+      .col-sm-9
+        = f.text_area :description, class: 'form-control'
+    .form-group.mt20.center
+      = f.submit '送信', class: 'btn btn-primary'

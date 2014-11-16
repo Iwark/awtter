@@ -1,0 +1,6 @@
+.form-error
+  - if obj.errors.any?
+    h4 エラー
+    ul
+      - obj.errors.full_messages.each do |msg|
+        li= msg

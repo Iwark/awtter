@@ -1,0 +1,152 @@
+// application.css.scss
+// Author:: Kohei Iwasaki
+// Date:: 2014-11-07
+// アプリ全体に適用するcss
+
+@import "bootstrap-custom.scss";
+@import "jquery-ui-custom.scss";
+
+@import 'nprogress';
+@import 'nprogress-bootstrap';
+
+$basic-font-color: #444;
+
+$line-color: #5bc0de;
+$link-color: #cc00ff;
+
+div, span, td, th, p, h1, h2, h3, h4{
+  color: $basic-font-color;
+}
+
+*{
+  // borderとpaddingをボックス内に含めるようにする
+  box-sizing: border-box;
+  // 長押しポップアップメニューの非表示
+  -webkit-touch-callout:none;
+}
+
+html, body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  // overflow-x: hidden;
+  background-color: #aaa;
+}
+
+h2{
+  padding-left: 4px;
+  a{
+    font-size: 28px;
+    color: $link-color;
+  }
+  width: 480px;
+  border-bottom: 2px solid $line-color;
+}
+
+h3{
+  margin: 15px 0;
+  padding: 5px 20px;
+  background-color: #6af;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.main-container{
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  margin: 0 auto;
+  border-radius: 8px;
+  left: 0;
+  right: 0;
+  max-width: 760px;
+  min-height: 100%;
+  padding: 0 20px;
+  background-color: white;
+
+  .main-body{
+    margin-top: 30px;
+  }
+}
+
+@import 'main/**/*.scss';
+
+a{
+  color: #dd0044;
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+    color: #aa4488;
+  }
+  &.link-disabled{
+    pointer-events: none;
+  }
+}
+
+p, ul, li{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style-type: none;
+}
+
+textarea{
+  resize: none;
+  min-height: 100px;
+}
+
+.placeholder { color: #aaa; }
+
+.title-line{
+  height: 30px;
+  line-height: 30px;
+  background-color: #eef;
+  padding-left: 20px;
+}
+
+.form-error{
+  width: 100%;
+  padding: 0 20px;
+  h2{
+    font-size: 18px;
+    color: #f44;
+  }
+}
+
+.break{
+  word-break: break-all;
+}
+.bold{
+  font-weight: 600;
+}
+
+.clear{
+  clear:both;
+}
+
+.mt10{
+  margin-top: 10px;
+}
+
+.ml10{
+  margin-left: 10px;
+}
+
+.mt20{
+  margin-top: 20px;
+}
+
+.pt10{
+  padding-top: 10px;
+}
+
+.pl10{
+  padding-left: 10px;
+}
+
+.center{
+  text-align: center;
+}

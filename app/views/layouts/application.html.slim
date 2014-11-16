@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title Awtter
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  body class="#{controller.class.parent.name.downcase} #{controller.controller_name}"
+    .wrapper
+      .main-container
+        h2= link_to 'Awtter', root_path
+        p.notice= notice
+        p.alert= alert
+        .main-body
+          = yield

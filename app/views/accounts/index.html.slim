@@ -1,0 +1,22 @@
+table.table
+  thead
+    tr
+      th Name
+      th Created
+      th Updated
+      th Target
+      th[colspan="3"]
+  tbody
+    - @accounts.each do |account|
+      tr
+        td.bold= account.name
+        td= account.created_at.strftime("%m/%d %H:%M")
+        td= account.updated_at.strftime("%m/%d %H:%M")
+        td= account.target
+        td= link_to 'Show', account
+        td= link_to 'Edit', edit_account_path(account)
+        td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
+      tr.desc
+        td[colspan="9"]= account.description
+br
+= link_to 'New Account', new_account_path, class: 'btn btn-primary'

@@ -1,0 +1,15 @@
+ja:
+  attributes:
+    created_at: 作成日
+  activerecord:
+    attributes:
+      account:
+        name: 名前
+        api_key: APIキー
+        api_secret: APIシークレット
+        access_token: アクセストークン
+        access_token_secret: アクセストークンシークレット
+        target: ターゲット
+        description: 詳細
+      group:
+        name: グループ名

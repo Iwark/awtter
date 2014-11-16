@@ -1,0 +1,44 @@
+- @groups.each do |group|
+  .group
+    .title
+      h4
+        span.box ■
+        = group.name
+      .edit
+        = link_to 'Edit', edit_group_path(group)
+      .delete
+        = link_to 'Delete', group, method: :delete, data: { confirm: 'Are you sure?' }
+    .group-accounts
+      ul
+        - group.accounts.each do |account|
+          li
+            span.name= "#{account.name} -> #{account.target}"
+            span.edit= link_to 'Edit', edit_account_path(account)
+            span.delete= link_to 'Delete', account, method: :delete, data: { confirm: 'Are you sure?' }
+      = render 'accounts/inline_form', account: @account, group: group
+      / ul
+      /   li= link_to '編集', edit_group_path(group)
+      /   li= link_to '削除', group, method: :delete, data: { confirm: 'Are you sure?' }
+      / table.table
+      /   thead
+      /     tr
+      /       th Name
+      /       th Created
+      /       th Updated
+      /       th Target
+      /       th[colspan="3"]
+      /   tbody
+      /     - group.accounts.each do |account|
+      /       tr
+      /         td.bold= account.name
+      /         td= account.created_at.strftime("%m/%d %H:%M")
+      /         td= account.updated_at.strftime("%m/%d %H:%M")
+      /         td= account.target
+      /         td= link_to 'Show', account
+      /         td= link_to 'Edit', edit_account_path(account)
+      /         td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
+      /       tr.desc
+      /         td[colspan="9"]= account.description
+.new-group
+  .title New Group
+  =render 'groups/form'

@@ -1,0 +1,25 @@
+.accounts{
+  .accounts-form{
+    padding-left: 10px;
+    padding-right: 10px;
+    .form-group{
+      .radio{
+        width: 100%;
+        height: 30px;
+        label{
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          input{
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+          }
+          .name{
+            padding-left: 10px;
+          }
+        }
+      }
+    }
+  }
+}
