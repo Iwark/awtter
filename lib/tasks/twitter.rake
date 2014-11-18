@@ -11,4 +11,16 @@ namespace :twitter do
     # end
   end
 
+  task follow_test: :environment do
+    account = Account.first
+    puts account
+    followed = account.follow_target_users(account.target, 3)
+    puts followed
+    followed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{f.name} (#{f.id})"}
+  end
+
+  task tasktest: :environment do
+    puts "aaaaaaa"
+  end
+
 end

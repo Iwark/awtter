@@ -18,11 +18,12 @@
 class Account < ActiveRecord::Base
 
   belongs_to :group
+  has_many :followed_users
 
-  validates :api_key, length: { is: 21 }
-  validates :api_secret, length: { is: 42 }
-  validates :access_token, length: { is: 50 }
-  validates :access_token_secret, length: { is: 42 }
+  # validates :api_key, length: { is: 21 }
+  # validates :api_secret, length: { is: 42 }
+  # validates :access_token, length: { is: 50 }
+  # validates :access_token_secret, length: { is: 42 }
 
   def get_client
     Twitter::REST::Client.new do |config|
@@ -35,9 +36,13 @@ class Account < ActiveRecord::Base
 
   def follow_target_users(target, n=10)
     client = self.get_client
+    puts client
     user = client.user(target)
+    puts user
     followers = client.follower_ids(user).to_a.shuffle!
+    puts followers
     followed = follow_users(client, followers, n)
+    puts followed
     self.update(updated_at: DateTime.now) if followed.length > 0
     followed
   end
@@ -53,12 +58,25 @@ class Account < ActiveRecord::Base
     followed = []
     i = 1
     users.each do |u|
-      logger.info "u: #{u}"
-      return followed if i >= n
+      return followed if i > n
       # f = client.user(u) rescue nil # useful for development
       # followed << f unless f.nil? || f.id.blank?
-      f = client.follow(u)
+      f = nil
+      begin
+        puts "u:#{u}"
+        f = client.follow(u)
+      rescue => e
+        puts "rescue"
+        puts "error:#{e}"
+        puts f
+      ensure
+        puts "ensure"
+        puts f
+      end
+      puts "----"
+      puts f
       unless f.blank? || f[0].id.blank?
+        FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name)
         followed << f[0]
       end
       i += 1
