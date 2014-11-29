@@ -1,6 +1,6 @@
-role :app, %w{awtter cclt-awtter}
-role :web, %w{awtter cclt-awtter}
-role :db,  %w{awtter cclt-awtter}
+role :app, %w{cclt-awtter}
+role :web, %w{cclt-awtter}
+role :db,  %w{cclt-awtter}
 
 set :stage, :production
 set :rails_env, :production
