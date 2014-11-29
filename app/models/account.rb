@@ -64,7 +64,7 @@ class Account < ActiveRecord::Base
       user.checked = true
       user.save
     end
-    self.update(updated_at: DateTime.now)
+    self.update(updated_at: DateTime.now) if unfollowed.length > 0
     unfollowed
   end
 
