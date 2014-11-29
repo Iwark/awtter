@@ -64,7 +64,32 @@
             display: inline-block;
             margin-left: 6px;
             font-size: 12px;
-            width: 200px;
+            width: 180px;
+            overflow: hidden;
+          }
+          .follow{
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 12px;
+            width: 90px;
+            overflow: hidden;
+            text-align: right;
+          }
+          .unfollow{
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 12px;
+            width: 90px;
+            overflow: hidden;
+            text-align: right;
+          }
+          .follower{
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 12px;
+            width: 90px;
+            overflow: hidden;
+            text-align: right;
           }
           .edit{
             a{

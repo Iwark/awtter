@@ -44,10 +44,12 @@ class Account < ActiveRecord::Base
   # ターゲットを15人までfollowする
   def follow_target_users(target, n=10)
     client = self.get_client
+    get_followers_count(client)
     user = client.user(target)
     followers = client.follower_ids(user).to_a.shuffle!
     followed = follow_users(client, followers, n)
-    self.update(updated_at: DateTime.now)
+    self.updated_at = DateTime.now
+    self.save
     followed
   end
 
@@ -69,6 +71,12 @@ class Account < ActiveRecord::Base
   end
 
   private
+
+  # フォロワーの数を取得
+  def get_followers_count(client)
+    self.follower_num = client.followers_count
+  end
+
   def follow_users(client, users, n)
     followed = []
     i = 1
