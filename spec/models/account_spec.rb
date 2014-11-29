@@ -13,6 +13,7 @@
 #  group_id            :string(255)
 #  created_at          :datetime
 #  updated_at          :datetime
+#  pattern             :integer
 #
 
 require 'rails_helper'

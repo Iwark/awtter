@@ -13,6 +13,7 @@
 #  group_id            :string(255)
 #  created_at          :datetime
 #  updated_at          :datetime
+#  pattern             :integer
 #
 
 class Account < ActiveRecord::Base
@@ -36,15 +37,24 @@ class Account < ActiveRecord::Base
 
   def follow_target_users(target, n=10)
     client = self.get_client
-    puts client
     user = client.user(target)
-    puts user
     followers = client.follower_ids(user).to_a.shuffle!
-    puts followers
     followed = follow_users(client, followers, n)
-    puts followed
     self.update(updated_at: DateTime.now) if followed.length > 0
     followed
+  end
+
+  # 48時間以上経ってフォロバの無いアカウントはフォローを削除する
+  def unfollow_users()
+    client = self.get_client
+    self.followed_users.where(checked: false).where("created_at < ?", DateTime.now - 48.hours).each do |user|
+      unless client.friendship?(client, user.user_id)
+        client.unfollow(user.user_id)
+        user.status = "unfollowed"
+      end
+      user.checked = true
+      user.save
+    end
   end
 
   # 前回updateされてから72分以上経った、
@@ -59,27 +69,21 @@ class Account < ActiveRecord::Base
     i = 1
     users.each do |u|
       return followed if i > n
-      # f = client.user(u) rescue nil # useful for development
-      # followed << f unless f.nil? || f.id.blank?
-      f = nil
-      begin
+      unless FollowedUser.exists?(user_id: u)
+        f = nil
         puts "u:#{u}"
-        f = client.follow(u)
-      rescue => e
-        puts "rescue"
-        puts "error:#{e}"
-        puts f
-      ensure
-        puts "ensure"
-        puts f
+        begin
+          f = client.follow(u)
+        rescue => e
+          puts "follow error:#{e}"
+        ensure
+        end
+        unless f.blank? || f[0].id.blank?
+          FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name, status:"followed", checked: false)
+          followed << f[0]
+          i += 1
+        end
       end
-      puts "----"
-      puts f
-      unless f.blank? || f[0].id.blank?
-        FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name)
-        followed << f[0]
-      end
-      i += 1
     end
     followed
   end

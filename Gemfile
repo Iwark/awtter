@@ -33,6 +33,10 @@ group :development do
   # gem 'rack-mini-profiler'
 end
 
+group :production do
+  gem 'mysql2'
+end
+
 group :development, :test do
   gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
   gem 'pry-byebug'
