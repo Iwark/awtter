@@ -1,4 +1,4 @@
-require 'action_dispatch/middleware/session/dalli_store'
+# require 'action_dispatch/middleware/session/dalli_store'
 
 listen '/tmp/unicorn.awtter.sock', :backlog => 64
 pid "tmp/pids/unicorn.pid"
