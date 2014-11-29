@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20141118071614) do
     t.string   "access_token_secret"
     t.string   "target"
     t.string   "description"
-    t.string   "group_id"
+    t.integer  "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "pattern"

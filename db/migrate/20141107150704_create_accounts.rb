@@ -8,7 +8,7 @@ class CreateAccounts < ActiveRecord::Migration
       t.string :access_token_secret
       t.string :target
       t.string :description
-      t.string :group_id
+      t.integer :group_id
 
       t.timestamps
 
