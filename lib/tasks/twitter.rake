@@ -13,7 +13,7 @@ namespace :twitter do
   task unfollow: :environment do
     Account.next_accounts().each do |account|
       unfollowed = account.unfollow_users()
-      unfollowed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{f.name} (#{f.account_id})"}
+      unfollowed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{f.name} (#{f.user_id})"}
     end
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118071614) do
+ActiveRecord::Schema.define(version: 20141129125313) do
 
   create_table "accounts", force: true do |t|
     t.string   "name"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20141118071614) do
 
   create_table "followed_users", force: true do |t|
     t.integer  "account_id"
-    t.integer  "user_id"
+    t.string   "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
