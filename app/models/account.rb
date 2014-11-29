@@ -35,19 +35,26 @@ class Account < ActiveRecord::Base
     end
   end
 
+  # 前回updateされてから72分以上経った、
+  # targetのあるアカウントをn個取得する
+  def self.next_accounts(n=15)
+    self.where.not(target: ["", nil]).where("updated_at < ?", DateTime.now - 72.minutes).order(:updated_at).limit(n)
+  end
+
+  # ターゲットを15人までfollowする
   def follow_target_users(target, n=10)
     client = self.get_client
     user = client.user(target)
     followers = client.follower_ids(user).to_a.shuffle!
     followed = follow_users(client, followers, n)
-    self.update(updated_at: DateTime.now) if followed.length > 0
+    self.update(updated_at: DateTime.now)
     followed
   end
 
   # 48時間以上経ってフォロバの無いアカウントはフォローを削除する
-  def unfollow_users()
+  def unfollow_users(n=10)
     client = self.get_client
-    self.followed_users.where(checked: false).where("created_at < ?", DateTime.now - 48.hours).each do |user|
+    self.followed_users.where(checked: false).where("created_at < ?", DateTime.now - 48.hours).limit(n).each do |user|
       unless client.friendship?(client, user.user_id)
         client.unfollow(user.user_id)
         user.status = "unfollowed"
@@ -55,12 +62,7 @@ class Account < ActiveRecord::Base
       user.checked = true
       user.save
     end
-  end
-
-  # 前回updateされてから72分以上経った、
-  # targetのあるアカウントをn個取得する
-  def self.next_accounts(n=5)
-    self.where.not(target: ["", nil]).where("updated_at < ?", DateTime.now - 72.minutes).order(:updated_at).limit(n)
+    self.update(updated_at: DateTime.now)
   end
 
   private
@@ -71,7 +73,6 @@ class Account < ActiveRecord::Base
       return followed if i > n
       unless FollowedUser.exists?(user_id: u)
         f = nil
-        puts "u:#{u}"
         begin
           f = client.follow(u)
         rescue => e

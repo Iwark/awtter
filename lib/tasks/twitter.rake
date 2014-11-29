@@ -3,23 +3,16 @@ namespace :twitter do
   desc "Follower Get"
 
   # :environment は モデルにアクセスするのに必須
-  task get_followers: :environment do
-    # Account.next_accounts(5).each do |account|
-    #   puts "get_followers started ... #{account.name}"
-    #   followed = account.follow_target_users(account.target) unless account.target.blank?
-    #   followed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{f.name} (#{f.id})"}
-    # end
+  task follow: :environment do
+    Account.next_accounts().each do |account|
+      account.follow_target_users(account.target)
+    end
   end
 
-  task follow_test: :environment do
-    account = Account.first
-    followed = account.follow_target_users(account.target, 3)
-    followed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{f.name} (#{f.id})"}
-  end
-
-  task tasktest: :environment do
-    account = Account.first
-    account.unfollow_users()
+  task unfollow: :environment do
+    Account.next_accounts().each do |account|
+      account.unfollow_users()
+    end
   end
 
 end

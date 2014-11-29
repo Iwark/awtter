@@ -10,7 +10,7 @@
         = link_to 'Delete', group, method: :delete, data: { confirm: 'Are you sure?' }
     .group-accounts
       ul
-        - group.accounts.each do |account|
+        - group.accounts.order(:target).each do |account|
           li
             span.name= "#{account.name} -> #{account.target}"
             span.edit= link_to 'Edit', edit_account_path(account)
