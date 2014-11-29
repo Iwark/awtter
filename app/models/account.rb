@@ -53,16 +53,19 @@ class Account < ActiveRecord::Base
 
   # 48時間以上経ってフォロバの無いアカウントはフォローを削除する
   def unfollow_users(n=10)
+    unfollowed = []
     client = self.get_client
     self.followed_users.where(checked: false).where("created_at < ?", DateTime.now - 48.hours).limit(n).each do |user|
       unless client.friendship?(client, user.user_id)
         client.unfollow(user.user_id)
         user.status = "unfollowed"
+        unfollowed << user
       end
       user.checked = true
       user.save
     end
     self.update(updated_at: DateTime.now)
+    unfollowed
   end
 
   private
