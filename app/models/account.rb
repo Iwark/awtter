@@ -74,7 +74,7 @@ class Account < ActiveRecord::Base
 
   # フォロワーの数を取得
   def get_followers_count(client)
-    self.follower_num = client.followers_count
+    self.follower_num = client.user.followers_count
   end
 
   def follow_users(client, users, n)
