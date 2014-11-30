@@ -24,10 +24,17 @@ env :PATH, ENV['PATH']
 set :output, "log/crontab.log"
 set :environment, :production
 
+# クーロンの動作確認
+every 3.hours do
+  puts "-- #{DateTime.now.strftime("%m/%d %H:%M")} cron is running"
+end
+
+# フォロー
 every 3.minutes do
   rake "twitter:follow"
 end
 
+# フォロー解除
 every 31.minutes do
   rake "twitter:unfollow"
 end
