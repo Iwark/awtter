@@ -8,7 +8,7 @@ ja:
         api_key: APIキー
         api_secret: APIシークレット
         access_token: アクセストークン
-        access_token_secret: アクセストークンシークレット
+        access_token_secret: アクセスシークレット
         target: ターゲット
         description: 詳細
       group:
