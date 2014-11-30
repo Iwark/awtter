@@ -119,7 +119,7 @@ class Account < ActiveRecord::Base
   private
 
   # フォローの数を取得
-  def get_followers_count(client)
+  def get_follow_count(client)
     self.follow_num = client.user.friends_count
   end
 
