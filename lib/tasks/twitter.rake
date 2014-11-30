@@ -6,7 +6,6 @@ namespace :twitter do
   task follow: :environment do
     puts "-- #{DateTime.now.strftime("%m/%d %H:%M")}: twitter:follow"
     Account.next_accounts().each do |account|
-      puts "account:#{account.name}"
       followed = account.follow_target_users(account.target)
       followed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{f.name} (#{f.id})"}
     end

@@ -51,7 +51,7 @@ class Account < ActiveRecord::Base
     begin
       user = client.user(target)
     rescue => e
-      puts "user find error:#{e}"
+      puts "finding user of #{self.name} target(#{target}) error:#{e}"
       return []
     ensure
     end
@@ -61,7 +61,7 @@ class Account < ActiveRecord::Base
     begin
       follower_ids = client.follower_ids(user)
     rescue => e
-      puts "follower_ids find error:#{e}"
+      puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
       return []
     ensure
     end
