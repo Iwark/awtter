@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  account_id :integer
-#  user_id    :integer
+#  user_id    :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #  name       :string(255)

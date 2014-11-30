@@ -10,10 +10,12 @@
 #  access_token_secret :string(255)
 #  target              :string(255)
 #  description         :string(255)
-#  group_id            :string(255)
+#  group_id            :integer
 #  created_at          :datetime
 #  updated_at          :datetime
 #  pattern             :integer
+#  follower_num        :integer          default(0)
+#  follow_num          :integer          default(0)
 #
 
 class Account < ActiveRecord::Base
@@ -44,8 +46,14 @@ class Account < ActiveRecord::Base
   # ターゲットを15人までfollowする
   def follow_target_users(target, n=10)
     client = self.get_client
+    get_follow_count(client)
     get_followers_count(client)
     
+    if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1
+      puts "#{self.name} is under the 1.1 rule."
+      return []
+    end
+
     # ユーザーの取得
     user = nil
     begin
@@ -109,6 +117,11 @@ class Account < ActiveRecord::Base
   end
 
   private
+
+  # フォローの数を取得
+  def get_followers_count(client)
+    self.follow_num = client.user.friends_count
+  end
 
   # フォロワーの数を取得
   def get_followers_count(client)

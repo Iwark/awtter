@@ -10,10 +10,12 @@
 #  access_token_secret :string(255)
 #  target              :string(255)
 #  description         :string(255)
-#  group_id            :string(255)
+#  group_id            :integer
 #  created_at          :datetime
 #  updated_at          :datetime
 #  pattern             :integer
+#  follower_num        :integer          default(0)
+#  follow_num          :integer          default(0)
 #
 
 require 'rails_helper'
