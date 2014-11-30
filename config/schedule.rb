@@ -24,10 +24,10 @@ env :PATH, ENV['PATH']
 set :output, "log/crontab.log"
 set :environment, :production
 
-every 7.minutes do
+every 3.minutes do
   rake "twitter:follow"
 end
 
-every 15.minutes do
+every 31.minutes do
   rake "twitter:unfollow"
 end
