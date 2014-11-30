@@ -126,7 +126,7 @@ class Account < ActiveRecord::Base
           f = client.follow(u)
         rescue => e
           puts "follow error:#{e}"
-          return followed if /limit/.match(e)
+          return followed if /limit/.match(e.to_s)
         ensure
         end
         unless f.blank? || f[0].id.blank?
