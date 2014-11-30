@@ -9,7 +9,11 @@ html
     .wrapper
       .main-container
         .main-body
-          h2= link_to 'Awtter', root_path
+          h2
+            = link_to 'Awtter', root_path
+            span.top-path= link_to 'Top', root_path
+            span.slash= '/'
+            span.history-path= link_to 'History', histories_path
           p.notice= notice
           p.alert= alert
           = yield

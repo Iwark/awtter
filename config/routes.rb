@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   resources :accounts
   resources :groups
 
+  resources :histories, only:[:index]
+  resources :retweets, only:[:index]
+
 end
