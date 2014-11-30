@@ -45,8 +45,28 @@ class Account < ActiveRecord::Base
   def follow_target_users(target, n=10)
     client = self.get_client
     get_followers_count(client)
-    user = client.user(target)
-    followers = client.follower_ids(user).to_a.shuffle!
+    
+    # ユーザーの取得
+    user = nil
+    begin
+      user = client.user(target)
+    rescue => e
+      puts "user find error:#{e}"
+      return []
+    ensure
+    end
+    
+    # フォロワーの取得
+    follower_ids = nil
+    begin
+      follower_ids = client.follower_ids(user)
+    rescue => e
+      puts "follower_ids find error:#{e}"
+      return []
+    ensure
+    end
+
+    followers = follower_ids.to_a.shuffle!
     followed = follow_users(client, followers, n)
     self.updated_at = DateTime.now
     self.save
@@ -58,8 +78,26 @@ class Account < ActiveRecord::Base
     unfollowed = []
     client = self.get_client
     self.followed_users.where(checked: false).where("created_at < ?", DateTime.now - 48.hours).limit(n).each do |user|
-      unless client.friendship?(client, user.user_id)
-        client.unfollow(user.user_id)
+      
+      # 友達になっているかどうかのチェック
+      is_friend = false
+      begin
+        is_friend = client.friendship?(client, user.user_id)
+      rescue => e
+        puts "is_friend error:#{e}"
+        next
+      ensure
+      end
+
+      unless is_friend
+        # フォロー解除
+        begin
+          client.unfollow(user.user_id)
+        rescue => e
+          puts "unfollow failed:#{e}"
+          next
+        ensure
+        end
         user.status = "unfollowed"
         unfollowed << user
       end
