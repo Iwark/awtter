@@ -6,14 +6,18 @@ namespace :twitter do
   task follow: :environment do
     Account.next_accounts().each do |account|
       followed = account.follow_target_users(account.target)
-      puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{followed.length} accounts."
+      if followed.length > 0
+        puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{followed.length} accounts."
+      end
     end
   end
 
   task unfollow: :environment do
     Account.next_accounts().each do |account|
       unfollowed = account.unfollow_users()
-      puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{unfollowed.length} accounts."
+      if unfollowed.length > 0
+        puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{unfollowed.length} accounts."
+      end
     end
   end
 
