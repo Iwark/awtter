@@ -52,7 +52,14 @@ namespace :twitter do
       retweet.account_retweets.group(:account_id).select(:account_id).each do |ar|
         account_ids << ar.account_id
       end
-      account = group.accounts.where.not(id: account_ids).first
+      
+      account = nil
+      if group
+        account = group.accounts.where.not(id: account_ids).first
+      else
+        account = Account.where.not(id: account_ids).first
+      end
+
       account.retweet(retweet)
 
       puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} successfully retweeted #{retweet.status_id}"
