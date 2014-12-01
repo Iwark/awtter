@@ -1,5 +1,3 @@
-lock '3.2.1'
-
 set :application, 'awtter'
 set :repo_url, 'git@github.com:Iwark/awtter.git'
 

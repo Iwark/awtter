@@ -19,7 +19,7 @@ class Retweet < ActiveRecord::Base
   has_many :account_retweets
   has_many :accounts, through: :account_retweets
 
-  enum status: { tmp: 0, done: 10}
+  enum status: { setup: 0, done: 10}
 
   scope :next_retweets, -> {
     where.not(status: Retweet.statuses[:done]).where("start_at < ?", DateTime.now)
