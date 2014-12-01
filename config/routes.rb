@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   resources :groups
 
   resources :histories, only:[:index]
-  resources :retweets, only:[:index]
+  resources :retweets
 
 end

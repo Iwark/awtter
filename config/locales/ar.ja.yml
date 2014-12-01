@@ -4,6 +4,7 @@ ja:
   activerecord:
     attributes:
       account:
+        group_id: グループ
         name: 名前
         api_key: APIキー
         api_secret: APIシークレット
@@ -13,3 +14,9 @@ ja:
         description: 詳細
       group:
         name: グループ名
+      retweet:
+        group_id: グループ
+        url: リツイートするURL
+        start_at: 開始時刻
+        interval: リツイート間隔
+        frequency: リツイート確率(%/分)

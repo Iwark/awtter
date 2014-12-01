@@ -1,0 +1,38 @@
+.retweets-form
+  = render 'errors/form_error', obj: @retweet
+  = form_for @retweet, html: { class: 'form-horizontal post-form' } do |f|
+    .form-group.mt10
+      .col-sm-3
+        = f.label :group_id, class: 'control-label'
+      .col-sm-9
+        .radio
+          label
+            = f.radio_button :group_id, 0, class: 'form_control'
+            .name All Groups
+        - Group.all.each do |group|
+          .radio
+            label
+              = f.radio_button :group_id, group.id, class: 'form-control'
+              .name= group.name
+    .form-group.mt10
+      .col-sm-3
+        = f.label :url, class: 'control-label'
+      .col-sm-9
+        = f.text_field :url, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :start_at, class: 'control-label'
+      .col-sm-9
+        = f.datetime_select :start_at, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :interval, class: 'control-label'
+      .col-sm-9
+        = f.number_field :interval, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :frequency, class: 'control-label'
+      .col-sm-9
+        = f.number_field :frequency, class: 'form-control'
+    .form-group.mt20.center
+      = f.submit '送信', class: 'btn btn-primary'

@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141130053339) do
+ActiveRecord::Schema.define(version: 20141201024101) do
+
+  create_table "account_retweets", force: true do |t|
+    t.integer  "account_id"
+    t.integer  "retweet_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "accounts", force: true do |t|
     t.string   "name"
@@ -29,7 +36,7 @@ ActiveRecord::Schema.define(version: 20141130053339) do
     t.integer  "follow_num",          default: 0
   end
 
-  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id"
+  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
 
   create_table "followed_users", force: true do |t|
     t.integer  "account_id"
@@ -46,6 +53,20 @@ ActiveRecord::Schema.define(version: 20141130053339) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "retweets", force: true do |t|
+    t.string   "url"
+    t.integer  "group_id"
+    t.datetime "start_at"
+    t.integer  "interval"
+    t.integer  "frequency"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "status",     default: 0
+  end
+
+  add_index "retweets", ["group_id"], name: "index_retweets_on_group_id", using: :btree
+  add_index "retweets", ["status"], name: "index_retweets_on_status", using: :btree
 
   create_table "statements", force: true do |t|
     t.string   "contents"

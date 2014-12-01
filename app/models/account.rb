@@ -22,6 +22,8 @@ class Account < ActiveRecord::Base
 
   belongs_to :group
   has_many :followed_users
+  has_many :account_retweets
+  has_many :retweets, through: :account_retweets
 
   # validates :api_key, length: { is: 21 }
   # validates :api_secret, length: { is: 42 }
@@ -114,6 +116,19 @@ class Account < ActiveRecord::Base
     end
     self.update(updated_at: DateTime.now) if unfollowed.length > 0
     unfollowed
+  end
+
+  # リツイート
+  def retweet(retweet)
+    client = self.get_client
+    begin
+      client.retweet(retweet.status_id)
+    rescue => e
+      puts "retweet error:#{e}"
+      return
+    ensure
+    end
+    self.retweets << retweet
   end
 
   private

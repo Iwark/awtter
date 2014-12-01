@@ -2,11 +2,14 @@
   = render 'errors/form_error', obj: @account
   = form_for @account, html: { class: 'form-horizontal post-form' } do |f|
     .form-group.mt10
-      - Group.all.each do |group|
-        .radio
-          label
-            = f.radio_button :group_id, group.id, class: 'form-control'
-            .name= group.name
+      .col-sm-3
+        = f.label :group_id, class: 'control-label'
+      .col-sm-9
+        - Group.all.each do |group|
+          .radio
+            label
+              = f.radio_button :group_id, group.id, class: 'form-control'
+              .name= group.name
     .form-group.mt10
       .col-sm-3
         = f.label :name, class: 'control-label'

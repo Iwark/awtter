@@ -38,3 +38,8 @@ end
 every 31.minutes do
   rake "twitter:unfollow"
 end
+
+# リツイート
+every 1.minutes do 
+  rake "twitter:retweet"
+end
