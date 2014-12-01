@@ -6,14 +6,14 @@ namespace :twitter do
   task follow: :environment do
     Account.next_accounts().each do |account|
       followed = account.follow_target_users(account.target)
-      followed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{f.name} (#{f.id})"}
+      puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{followed.length} accounts."
     end
   end
 
   task unfollow: :environment do
     Account.next_accounts().each do |account|
       unfollowed = account.unfollow_users()
-      unfollowed.each { |f| puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{f.name} (#{f.user_id})"}
+      puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} unfollowed #{unfollowed.length} accounts."
     end
   end
 
@@ -52,7 +52,7 @@ namespace :twitter do
       retweet.account_retweets.group(:account_id).select(:account_id).each do |ar|
         account_ids << ar.account_id
       end
-      
+
       account = nil
       if group
         account = group.accounts.where.not(id: account_ids).first
