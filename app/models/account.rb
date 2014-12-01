@@ -53,6 +53,8 @@ class Account < ActiveRecord::Base
     
     if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1
       puts "#{self.name} is under the 1.1 rule."
+      self.updated_at = DateTime.now
+      self.save
       return []
     end
 
