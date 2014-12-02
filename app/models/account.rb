@@ -111,7 +111,7 @@ class Account < ActiveRecord::Base
       unless is_friend
         # フォロー解除
         begin
-          client.unfollow(user.user_id)
+          client.unfollow(user.user_id.to_i)
         rescue => e
           puts "unfollow failed:#{e}"
           next
