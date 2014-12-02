@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 20141202011736) do
     t.integer  "pattern"
     t.integer  "follower_num",        default: 0
     t.integer  "follow_num",          default: 0
-    t.datetime "followed_at"
-    t.datetime "unfollowed_at"
+    t.datetime "followed_at",         default: '2014-12-02 01:25:53'
+    t.datetime "unfollowed_at",       default: '2014-12-02 01:25:53'
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
