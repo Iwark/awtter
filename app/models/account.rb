@@ -158,6 +158,9 @@ class Account < ActiveRecord::Base
     users.each do |u|
       return followed if i > n
       unless FollowedUser.exists?(user_id: u)
+
+        next if client.user(u).protected?
+
         f = nil
         begin
           f = client.follow(u)
