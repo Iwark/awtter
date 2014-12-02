@@ -66,14 +66,8 @@ class Account < ActiveRecord::Base
     end
 
     # ユーザーの取得
-    user = nil
-    begin
-      user = client.user(target)
-    rescue => e
-      puts "finding user of #{self.name} target(#{target}) error:#{e}"
-      return []
-    ensure
-    end
+    user = self.get_user(client)
+    return [] unless user
     
     # フォロワーの取得
     follower_ids = nil
@@ -142,14 +136,30 @@ class Account < ActiveRecord::Base
 
   private
 
+  def get_user(client, target=nil)
+    user = nil
+    begin
+      user = client.user(target)
+    rescue => e
+      puts "finding user of #{self.name} target(#{target}) error:#{e}"
+      return nil
+    ensure
+    end
+    user
+  end
+
   # フォローの数を取得
   def get_follow_count(client)
-    self.follow_num = client.user.friends_count
+    user = self.get_user(client)
+    return unless user
+    self.follow_num = user.friends_count
   end
 
   # フォロワーの数を取得
   def get_followers_count(client)
-    self.follower_num = client.user.followers_count
+    user = self.get_user(client)
+    return unless user
+    self.follower_num = user.followers_count
   end
 
   def follow_users(client, users, n)
@@ -159,7 +169,8 @@ class Account < ActiveRecord::Base
       return followed if i > n
       unless FollowedUser.exists?(user_id: u)
 
-        next if client.user(u).protected?
+        user = self.get_user(client, u)
+        next if user.protected?
 
         f = nil
         begin
