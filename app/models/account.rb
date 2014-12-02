@@ -101,7 +101,7 @@ class Account < ActiveRecord::Base
       # 友達になっているかどうかのチェック
       is_friend = false
       begin
-        is_friend = client.friendship?(client, user.user_id)
+        is_friend = client.friendship?(client, user.user_id.to_i)
       rescue => e
         puts "is_friend error:#{e}"
         next
