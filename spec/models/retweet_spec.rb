@@ -10,7 +10,7 @@
 #  frequency  :integer
 #  created_at :datetime
 #  updated_at :datetime
-#  status     :integer
+#  status     :integer          default(0)
 #
 
 require 'rails_helper'

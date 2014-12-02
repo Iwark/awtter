@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141201024101) do
+ActiveRecord::Schema.define(version: 20141202011736) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 20141201024101) do
     t.integer  "pattern"
     t.integer  "follower_num",        default: 0
     t.integer  "follow_num",          default: 0
+    t.datetime "followed_at"
+    t.datetime "unfollowed_at"
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree

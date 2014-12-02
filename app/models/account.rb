@@ -16,6 +16,8 @@
 #  pattern             :integer
 #  follower_num        :integer          default(0)
 #  follow_num          :integer          default(0)
+#  followed_at         :datetime
+#  unfollowed_at       :datetime
 #
 
 class Account < ActiveRecord::Base
@@ -39,13 +41,18 @@ class Account < ActiveRecord::Base
     end
   end
 
-  # 前回updateされてから72分以上経った、
+  # 前回followしてから72分以上経った、
   # targetのあるアカウントをn個取得する
-  def self.next_accounts(n=15)
-    self.where.not(target: ["", nil]).where("updated_at < ?", DateTime.now - 72.minutes).order(:updated_at).limit(n)
+  def self.next_follow_accounts(n=15)
+    self.where.not(target: ["", nil]).where("followed_at < ?", DateTime.now - 72.minutes).order(:followed_at).limit(n)
   end
 
-  # ターゲットを15人までfollowする
+  # 前回unfollowしてから120分以上経ったアカウントをn個取得する
+  def self.next_unfollow_accounts(n=15)
+    self.where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
+  end
+
+  # ターゲットを10人までfollowする
   def follow_target_users(target, n=10)
     client = self.get_client
     get_follow_count(client)
@@ -53,7 +60,7 @@ class Account < ActiveRecord::Base
     
     if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1
       puts "#{self.name} is under the 1.1 rule."
-      self.updated_at = DateTime.now
+      self.followed_at = DateTime.now
       self.save
       return []
     end
@@ -80,7 +87,7 @@ class Account < ActiveRecord::Base
 
     followers = follower_ids.to_a.shuffle!
     followed = follow_users(client, followers, n)
-    self.updated_at = DateTime.now
+    self.followed_at = DateTime.now
     self.save
     followed
   end
@@ -116,7 +123,7 @@ class Account < ActiveRecord::Base
       user.checked = true
       user.save
     end
-    self.update(updated_at: DateTime.now) if unfollowed.length > 0
+    self.update(unfollowed_at: DateTime.now) if unfollowed.length > 0
     unfollowed
   end
 
