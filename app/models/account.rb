@@ -66,7 +66,7 @@ class Account < ActiveRecord::Base
     end
 
     # ユーザーの取得
-    user = self.get_user(client)
+    user = get_user(client)
     return [] unless user
     
     # フォロワーの取得
@@ -150,14 +150,14 @@ class Account < ActiveRecord::Base
 
   # フォローの数を取得
   def get_follow_count(client)
-    user = self.get_user(client)
+    user = get_user(client)
     return unless user
     self.follow_num = user.friends_count
   end
 
   # フォロワーの数を取得
   def get_followers_count(client)
-    user = self.get_user(client)
+    user = get_user(client)
     return unless user
     self.follower_num = user.followers_count
   end
@@ -169,7 +169,7 @@ class Account < ActiveRecord::Base
       return followed if i > n
       unless FollowedUser.exists?(user_id: u)
 
-        user = self.get_user(client, u)
+        user = get_user(client, u)
         next if user.protected?
 
         f = nil
