@@ -43,3 +43,8 @@ end
 every 1.minutes do 
   rake "twitter:retweet"
 end
+
+# リツイート自動化
+every 23.minutes do
+  rake "twitter:auto_retweet"
+end
