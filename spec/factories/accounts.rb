@@ -16,8 +16,10 @@
 #  pattern             :integer
 #  follower_num        :integer          default(0)
 #  follow_num          :integer          default(0)
-#  followed_at         :datetime
-#  unfollowed_at       :datetime
+#  followed_at         :datetime         default(2014-12-02 01:25:53 UTC)
+#  unfollowed_at       :datetime         default(2014-12-02 01:25:53 UTC)
+#  auto_retweet        :boolean          default(FALSE)
+#  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
 #
 
 FactoryGirl.define do

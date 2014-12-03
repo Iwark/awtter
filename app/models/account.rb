@@ -16,8 +16,10 @@
 #  pattern             :integer
 #  follower_num        :integer          default(0)
 #  follow_num          :integer          default(0)
-#  followed_at         :datetime
-#  unfollowed_at       :datetime
+#  followed_at         :datetime         default(2014-12-02 01:25:53 UTC)
+#  unfollowed_at       :datetime         default(2014-12-02 01:25:53 UTC)
+#  auto_retweet        :boolean          default(FALSE)
+#  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
 #
 
 class Account < ActiveRecord::Base
@@ -52,13 +54,18 @@ class Account < ActiveRecord::Base
     self.where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
   end
 
+  # 前回auto_retweetしてから3時間以上経ったアカウントをn個取得する
+  def self.next_auto_retweet_accounts(n=15)
+    self.where("auto_retweet = true and auto_retweeted_at < ?", DateTime.now - 3.hours).order(:auto_retweeted_at).limit(n)
+  end
+
   # ターゲットを10人までfollowする
   def follow_target_users(target, n=10)
     client = self.get_client
     get_follow_count(client)
     get_followers_count(client)
     
-    if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1
+    if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1 - 10
       puts "#{self.name} is under the 1.1 rule."
       self.followed_at = DateTime.now
       self.save
@@ -97,7 +104,7 @@ class Account < ActiveRecord::Base
       begin
         is_friend = client.friendship?(client, user.user_id.to_i)
       rescue => e
-        puts "is_friend error:#{e}"
+        puts "#{self.name} is_friend error:#{e}"
         next
       ensure
       end
@@ -107,7 +114,7 @@ class Account < ActiveRecord::Base
         begin
           client.unfollow(user.user_id.to_i)
         rescue => e
-          puts "unfollow failed:#{e}"
+          puts "#{self.name} unfollow failed:#{e}"
           next
         ensure
         end
@@ -121,13 +128,33 @@ class Account < ActiveRecord::Base
     unfollowed
   end
 
+  # 自動リツイートの作成
+  def create_auto_retweet()
+    client = self.get_client
+    client.home_timeline.each do |tweet|
+      if tweet.retweet_count > 2 && self.check_tweet(tweet.text)
+        Retweet.create(url: tweet.url.to_s, account_id: self.id, start_at: DateTime.now, interval: 0, frequency: 100)
+        self.update(auto_retweeted_at: DateTime.now)
+        return
+      end
+    end
+  end
+
+  def check_tweet(text)
+    if text.match(/(セフレ|エロ|サクラ|無料|神アプリ|万円|アフィリエイト|ゲーム|iOS|And|メアド|番号)/)
+      return false
+    else
+      return true
+    end
+  end
+
   # リツイート
   def retweet(retweet)
     client = self.get_client
     begin
       client.retweet(retweet.status_id)
     rescue => e
-      puts "retweet error:#{e}"
+      puts "#{self.name} retweet error:#{e}"
       return
     ensure
     end
@@ -176,7 +203,7 @@ class Account < ActiveRecord::Base
         begin
           f = client.follow(u)
         rescue => e
-          puts "follow error:#{e}"
+          puts "#{self.name} follow error:#{e}"
           return followed if /limit/.match(e.to_s)
         ensure
         end
@@ -189,4 +216,5 @@ class Account < ActiveRecord::Base
     end
     followed
   end
+
 end

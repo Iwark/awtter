@@ -45,5 +45,16 @@
         = f.label :description, class: 'control-label'
       .col-sm-9
         = f.text_area :description, class: 'form-control'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :auto_retweet, class: 'control-label'
+      .col-sm-9
+        .btn-group.btn-toggle data-toggle="buttons"
+          label.btn.btn-default
+            = f.radio_button :auto_retweet, true
+            | する
+          label.btn.btn-default
+            = f.radio_button :auto_retweet, false
+            | しない
     .form-group.mt20.center
       = f.submit '送信', class: 'btn btn-primary'

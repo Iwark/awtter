@@ -21,15 +21,29 @@ namespace :twitter do
     end
   end
 
+  task auto_retweet: :environment do
+    Account.next_auto_retweet_accounts().each do |account|
+      account.create_auto_retweet()
+    end
+  end
+
   task retweet: :environment do
     retweets = Retweet.next_retweets
     retweets.each do |retweet|
-      group = retweet.group
       max_num = 0
-      if group
-        max_num = group.accounts.count
+      account = nil
+      group = nil
+
+      if retweet.account_id > 0
+        account = Account.find(retweet.account_id)
+        max_num = 1
       else
-        max_num = Account.count
+        group = retweet.group
+        if group
+          max_num = group.accounts.count
+        else
+          max_num = Account.count
+        end
       end
 
       account_retweets_num = retweet.account_retweets.count
@@ -57,8 +71,7 @@ namespace :twitter do
         account_ids << ar.account_id
       end
 
-      account = nil
-      if group
+      if !account && group
         account = group.accounts.where.not(id: account_ids).first
       else
         account = Account.where.not(id: account_ids).first

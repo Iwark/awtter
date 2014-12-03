@@ -11,6 +11,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #  status     :integer          default(0)
+#  account_id :integer          default(0)
 #
 
 require 'rails_helper'
