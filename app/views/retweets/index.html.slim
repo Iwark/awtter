@@ -2,7 +2,7 @@ table.table
   thead
     tr
       th リツイート
-      th グループ
+      th 対象
       th 開始時刻
       th 間隔
       th 確率(%/分)
@@ -13,7 +13,10 @@ table.table
       tr
         td= link_to retweet.status_id, retweet.url, target: '_blank'
         td
-          - if retweet.group
+          - if retweet.account_id > 0
+            - name = Account.find(retweet.account_id).name
+            = link_to name, "https://twitter.com/#{name}", target: '_blank'
+          - elsif retweet.group
             = retweet.group.name
           - else
             | すべて

@@ -22,8 +22,11 @@ namespace :twitter do
   end
 
   task auto_retweet: :environment do
-    Account.next_auto_retweet_accounts().each do |account|
-      account.create_auto_retweet()
+    # 朝8時まではリツイートしない
+    unless DateTime.now.hour < 8
+      Account.next_auto_retweet_accounts().each do |account|
+        account.create_auto_retweet()
+      end
     end
   end
 
