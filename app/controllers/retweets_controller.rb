@@ -3,7 +3,7 @@ class RetweetsController < ApplicationController
 
   # 一覧
   def index
-    @retweets = Retweet.all
+    @retweets = Retweet.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show

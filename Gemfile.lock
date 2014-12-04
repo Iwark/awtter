@@ -151,6 +151,9 @@ GEM
       jquery-ui-rails (= 4.0.3)
       railties (>= 3.1.0)
     json (1.8.1)
+    kaminari (0.15.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.9.2)
     libv8 (3.16.14.7)
     listen (2.8.3)
@@ -344,6 +347,7 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   jquery-ui-sass-rails
+  kaminari
   mysql2
   nprogress-rails
   pry-byebug

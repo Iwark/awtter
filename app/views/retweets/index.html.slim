@@ -1,3 +1,4 @@
+.news style="margin: 5px;"
 table.table
   thead
     tr
@@ -26,5 +27,8 @@ table.table
         td= retweet.status
         td= link_to 'Edit', edit_retweet_path(retweet)
         td= link_to 'Destroy', retweet, method: :delete, data: { confirm: 'Are you sure?' }
+
+= paginate @retweets
+
 br
 = link_to 'New Retweet', new_retweet_path, class: 'btn btn-primary'

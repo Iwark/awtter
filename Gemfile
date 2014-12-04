@@ -18,6 +18,7 @@ gem 'unicorn'
 gem 'whenever', :require => false
 gem 'settingslogic'
 gem 'twitter'
+gem 'kaminari'
 
 group :development do
   gem 'sqlite3'
