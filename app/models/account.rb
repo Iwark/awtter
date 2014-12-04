@@ -79,7 +79,7 @@ class Account < ActiveRecord::Base
     # フォロワーの取得
     follower_ids = nil
     begin
-      follower_ids = client.follower_ids(user)
+      follower_ids = client.follower_ids(user, count: 5000)
     rescue => e
       puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
       return []
