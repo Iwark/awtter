@@ -25,8 +25,8 @@ namespace :twitter do
     # 朝8時まではツイートしない
     unless DateTime.now.hour < 8
       Account.next_auto_tweet_accounts().each do |account|
-        # 15分に１回、5%の確率でツイート
-        account.create_auto_tweet() if rand(100) < 5
+        # 3%の確率でツイート
+        account.create_auto_tweet() if rand(100) < 3
       end
     end
   end

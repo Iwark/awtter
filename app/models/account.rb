@@ -59,9 +59,9 @@ class Account < ActiveRecord::Base
     self.where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
   end
 
-  # 前回auto_tweetしてから15分以上経ったアカウントをn個取得する
+  # 前回auto_tweetしてから7分以上経ったアカウントをn個取得する
   def self.next_auto_tweet_accounts(n=15)
-    self.where("auto_tweet = true and auto_tweeted_at < ?", DateTime.now - 15.minutes).order(:auto_tweeted_at).limit(n)
+    self.where("auto_tweet = true and auto_tweeted_at < ?", DateTime.now - 7.minutes).order(:auto_tweeted_at).limit(n)
   end
 
   # 前回auto_retweetしてから3時間以上経ったアカウントをn個取得する
