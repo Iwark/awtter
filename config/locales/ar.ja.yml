@@ -12,9 +12,12 @@ ja:
         access_token_secret: アクセスシークレット
         target: ターゲット
         description: 詳細
+        auto_tweet: ツイート自動化
         auto_retweet: リツイート自動化
+        tag_list: キーワード
       group:
         name: グループ名
+        tag_list: キーワード
       retweet:
         group_id: グループ
         url: リツイートするURL

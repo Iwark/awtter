@@ -11,4 +11,6 @@
 class Group < ActiveRecord::Base
   has_many :accounts
   has_many :retweets
+
+  acts_as_taggable
 end

@@ -14,3 +14,9 @@ $ ()->
       $(this).parent().find('.btn-primary').toggleClass('btn-primary')
 
     $(this).toggleClass('btn-primary')
+
+  # タグインプット
+  $(".tag-list").tagsInput(
+    'width':'100%',
+    'height':'auto'
+  )

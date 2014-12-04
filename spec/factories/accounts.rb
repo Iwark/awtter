@@ -20,6 +20,8 @@
 #  unfollowed_at       :datetime         default(2014-12-02 01:25:53 UTC)
 #  auto_retweet        :boolean          default(FALSE)
 #  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
+#  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
+#  auto_tweet          :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

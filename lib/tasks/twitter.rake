@@ -21,6 +21,16 @@ namespace :twitter do
     end
   end
 
+  task auto_tweet: :environment do
+    # 朝8時まではツイートしない
+    unless DateTime.now.hour < 8
+      Account.next_auto_tweet_accounts().each do |account|
+        # 15分に１回、5%の確率でツイート
+        account.create_auto_tweet() if rand(100) < 5
+      end
+    end
+  end
+
   task auto_retweet: :environment do
     # 朝8時まではリツイートしない
     unless DateTime.now.hour < 8

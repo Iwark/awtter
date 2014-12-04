@@ -1,33 +1,15 @@
 table.table
   thead
     tr
-      th ツイート
-      th 対象
-      th 開始時刻
-      th 間隔
-      th 確率(%/分)
-      th ステータス
-      th colspan="2"
+      th アカウント
+      th ツイート内容
+      th ツイート時刻
   tbody
-    - @tweets.each do |retweet|
+    - @tweets.each do |tweet|
       tr
-        td= link_to tweet.status_id, tweet.url, target: '_blank'
-        td
-          - if retweet.account_id > 0
-            - name = Account.find(tweet.account_id).name
-            = link_to name, "https://twitter.com/#{name}", target: '_blank'
-          - elsif tweet.group
-            = tweet.group.name
-          - else
-            | すべて
-        td= tweet.start_at.strftime("%m/%d %H:%M")
-        td= tweet.interval
-        td= tweet.frequency
-        td= tweet.status
-        td= link_to 'Edit', edit_tweet_path(tweet)
-        td= link_to 'Destroy', tweet, method: :delete, data: { confirm: 'Are you sure?' }
+        td= link_to tweet.account.name, "https://twitter.com/#{tweet.account.name}", target: '_blank'
+        td= truncate(tweet.text, length: 40)
+        td= tweet.created_at.strftime("%m/%d %H:%M")
+
 
 = paginate @tweets
-
-br
-= link_to 'New Tweet', new_tweet_path, class: 'btn btn-primary'

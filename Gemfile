@@ -19,6 +19,7 @@ gem 'whenever', :require => false
 gem 'settingslogic'
 gem 'twitter'
 gem 'kaminari'
+gem "acts-as-taggable-on"
 
 group :development do
   gem 'sqlite3'

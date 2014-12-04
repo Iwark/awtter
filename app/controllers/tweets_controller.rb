@@ -3,7 +3,7 @@ class TweetsController < ApplicationController
 
   # 一覧
   def index
-    @tweets = Tweet.all
+    @tweets = Tweet.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show

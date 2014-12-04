@@ -39,6 +39,11 @@ every 23.minutes do
   rake "twitter:unfollow"
 end
 
+# ツイート自動化
+every 10.minutes do
+  rake "twitter:auto_tweet"
+end
+
 # リツイート
 every 1.minutes do 
   rake "twitter:retweet"

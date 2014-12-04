@@ -2,7 +2,15 @@
   = render 'errors/form_error', obj: @group
   = form_for @group, html: { class: 'form-horizontal post-form' } do |f|
     .form-group.mt10
-      .col-xs-8
+      .col-sm-3
+        = f.label :name
+      .col-sm-9
         = f.text_field :name, class: 'form-control', placeholder: 'グループ名'
-      .col-xs-2
-        = f.submit '送信'
+    .form-group.mt10
+      .col-sm-3
+        = f.label :tag_list, class: 'control-label'
+      .col-sm-9
+        .tags
+            = f.text_field :tag_list, class: 'tag-list'
+    .form-group.mt20.center
+      = f.submit '送信', class: 'btn btn-primary'
