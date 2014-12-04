@@ -35,7 +35,7 @@ every 3.minutes do
 end
 
 # フォロー解除
-every 31.minutes do
+every 23.minutes do
   rake "twitter:unfollow"
 end
 

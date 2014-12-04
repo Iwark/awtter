@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141203070337) do
+ActiveRecord::Schema.define(version: 20141204072221) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -34,13 +34,13 @@ ActiveRecord::Schema.define(version: 20141203070337) do
     t.integer  "pattern"
     t.integer  "follower_num",        default: 0
     t.integer  "follow_num",          default: 0
-    t.datetime "followed_at",         default: '2014-12-04 00:20:57'
-    t.datetime "unfollowed_at",       default: '2014-12-04 00:20:57'
+    t.datetime "followed_at",         default: '2014-12-02 01:25:53'
+    t.datetime "unfollowed_at",       default: '2014-12-02 01:25:53'
     t.boolean  "auto_retweet",        default: false
-    t.datetime "auto_retweeted_at",   default: '2014-12-04 00:20:57'
+    t.datetime "auto_retweeted_at",   default: '2014-12-03 06:55:17'
   end
 
-  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id"
+  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
 
   create_table "followed_users", force: true do |t|
     t.integer  "account_id"
@@ -70,13 +70,21 @@ ActiveRecord::Schema.define(version: 20141203070337) do
     t.integer  "account_id", default: 0
   end
 
-  add_index "retweets", ["group_id"], name: "index_retweets_on_group_id"
-  add_index "retweets", ["status"], name: "index_retweets_on_status"
+  add_index "retweets", ["group_id"], name: "index_retweets_on_group_id", using: :btree
+  add_index "retweets", ["status"], name: "index_retweets_on_status", using: :btree
 
   create_table "statements", force: true do |t|
     t.string   "contents"
     t.integer  "priority"
     t.integer  "pattern"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tweets", force: true do |t|
+    t.integer  "tweet_id"
+    t.string   "text"
+    t.integer  "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
