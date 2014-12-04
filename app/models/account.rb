@@ -197,7 +197,13 @@ class Account < ActiveRecord::Base
       unless FollowedUser.exists?(user_id: u)
 
         user = get_user(client, u)
-        next if !user || user.protected?
+        next if !user
+
+        if user.protected?
+          FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protected", checked: true)
+          i += 1
+          next
+        end
 
         f = nil
         begin

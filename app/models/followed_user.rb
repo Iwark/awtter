@@ -15,7 +15,7 @@
 class FollowedUser < ActiveRecord::Base
   belongs_to :account
 
-  enum status: { followed: 10, unfollowed: 20}
+  enum status: { followed: 10, unfollowed: 20, protected: 30 }
 
   scope :by_status, -> status {
     where(status: FollowedUser.statuses[status])
