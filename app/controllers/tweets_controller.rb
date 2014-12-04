@@ -49,6 +49,6 @@ class TweetsController < ApplicationController
     end
 
     def tweet_params
-      params.require(:tweet).permit(:group_id, :url, :start_at, :interval, :frequency)
+      params.require(:tweet).permit(:account_id, :text, :tweet_id)
     end
 end

@@ -73,7 +73,7 @@ class Account < ActiveRecord::Base
     end
 
     # ユーザーの取得
-    user = get_user(client)
+    user = get_user(client, target)
     return [] unless user
     
     # フォロワーの取得
