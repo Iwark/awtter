@@ -1,3 +1,7 @@
+.auto-followers-count style="margin: 5px;"
+  | 自動化で取得したフォロワー数 :
+  span style="margin-left:10px;"= FollowedUser.where(status:10, checked: true).count
+
 - @groups.each do |group|
   .group
     .title

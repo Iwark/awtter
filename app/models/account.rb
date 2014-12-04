@@ -194,32 +194,38 @@ class Account < ActiveRecord::Base
     i = 1
     users.each do |u|
       return followed if i > n
-      unless FollowedUser.exists?(user_id: u)
+      next if FollowedUser.exists?(user_id: u)
 
-        user = get_user(client, u)
-        next if !user
+      user = get_user(client, u)
+      next if !user
 
-        if user.protected?
-          FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
-          i += 1
-          next
-        end
-
-        f = nil
-        begin
-          f = client.follow(u)
-        rescue => e
-          puts "#{self.name} follow error:#{e}"
-          return followed if /limit/.match(e.to_s)
-        ensure
-        end
-        unless f.blank? || f[0].id.blank?
-          FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name, status:"followed", checked: false)
-          followed << f[0]
-          i += 1
-        end
+      if user.protected?
+        puts "#{self.name} canceled following #{u} because it is protected."
+        FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
+        i += 1
+        next
       end
+
+      f = nil
+      begin
+        f = client.follow(u)
+      rescue => e
+        puts "#{self.name} follow error:#{e}"
+        return followed if /limit/.match(e.to_s)
+      ensure
+      end
+
+      if f.blank? || f[0].id.blank?
+        puts "#{self.name} failed to follow #{u}"
+        next
+      end
+
+      FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name, status:"followed", checked: false)
+      followed << f[0]
+      i += 1
+      
     end
+    puts "#{self.name} finished following the target followers."
     followed
   end
 
