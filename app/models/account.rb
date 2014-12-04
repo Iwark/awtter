@@ -200,7 +200,7 @@ class Account < ActiveRecord::Base
         next if !user
 
         if user.protected?
-          FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protected", checked: true)
+          FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
           i += 1
           next
         end
