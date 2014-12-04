@@ -76,7 +76,7 @@ namespace :twitter do
 
       if !account && group
         account = group.accounts.where.not(id: account_ids).first
-      else
+      elsif !account
         account = Account.where.not(id: account_ids).first
       end
 
