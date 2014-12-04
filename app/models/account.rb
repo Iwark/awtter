@@ -133,7 +133,7 @@ class Account < ActiveRecord::Base
     client = self.get_client
     client.home_timeline.each do |tweet|
       if tweet.retweet_count > 2 && self.check_tweet(tweet.text)
-        Retweet.create(url: tweet.url.to_s, account_id: self.id, start_at: DateTime.now, interval: 0, frequency: 100)
+        Retweet.create(url: tweet.url.to_s, account_id: self.id, start_at: DateTime.now, interval: 0, frequency: 5)
         self.update(auto_retweeted_at: DateTime.now)
         return
       end
