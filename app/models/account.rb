@@ -215,15 +215,18 @@ class Account < ActiveRecord::Base
       ensure
       end
 
+      name = nil
+
       if f.blank? || f[0].id.blank?
-        puts "#{self.name} failed to follow #{u}"
-        next
+        puts "#{self.name} failed to follow #{u} maybe this account is already followed."
+      else
+        name = f[0].name
       end
 
-      FollowedUser.create(user_id: f[0].id.to_i, account_id: self.id, name: f[0].name, status:"followed", checked: false)
-      followed << f[0]
+      FollowedUser.create(user_id: u.to_i, account_id: self.id, name: name, status:"followed", checked: false)
+      followed << u
       i += 1
-      
+
     end
     puts "#{self.name} finished following the target followers."
     followed
