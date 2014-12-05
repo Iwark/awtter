@@ -188,6 +188,11 @@ class Account < ActiveRecord::Base
           next
         end
 
+        # １人称が俺・僕のものはツイートしない
+        if result[:text].match(/(俺|僕)/)
+          next
+        end
+
         # 60文字以下のものにする。
         unless result[:text].length < 60
           next
