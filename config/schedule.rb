@@ -40,7 +40,7 @@ every 23.minutes do
 end
 
 # ツイート自動化
-every 7.minutes do
+every 4.minutes do
   rake "twitter:auto_tweet"
 end
 
