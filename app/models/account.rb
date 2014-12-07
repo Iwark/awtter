@@ -161,7 +161,7 @@ class Account < ActiveRecord::Base
       next if Tweet.exists?(tweet_id: result[:id].to_s)
 
       # リツイートは多すぎないものにする。
-      if result[:retweet_count] > 0 && result[:retweet_count] < 10
+      if result[:retweet_count] < 10
         
         # URLを含むツイートはしない
         if result[:entities][:urls].length > 0 && result[:entities][:urls][0][:url]
@@ -195,6 +195,11 @@ class Account < ActiveRecord::Base
 
         # 60文字以下のものにする。
         unless result[:text].length < 60
+          next
+        end
+
+        # ハッシュタグのついてるものはツイートしない
+        if result[:entities][:hashtags].length > 0
           next
         end
 
