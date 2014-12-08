@@ -197,6 +197,11 @@ class Account < ActiveRecord::Base
           next
         end
 
+        # 「拡散」という文字を含むものはツイートしない
+        if result[:text].match(/拡散/)
+          next
+        end
+
         # 60文字以下のものにする。
         unless result[:text].length < 60
           next
