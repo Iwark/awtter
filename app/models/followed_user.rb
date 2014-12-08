@@ -15,10 +15,21 @@
 class FollowedUser < ActiveRecord::Base
   belongs_to :account
 
-  enum status: { followed: 10, unfollowed: 20, protecting: 30 }
+  enum status: { followed: 10, unfollowed: 20, protecting: 30, friend: 40 }
 
   scope :by_status, -> status {
     where(status: FollowedUser.statuses[status])
+  }
+
+  # フォローしてから48時間以上たったもの
+  scope :old_ones, -> {
+    where(FollowedUser.arel_table[:created_at].lt(2.days.ago))
+  }
+
+  # followed または チェックしていないもの
+  scope :followed_or_not_checked, -> {
+    where(FollowedUser.arel_table[:status].eq(FollowedUser.statuses[:followed]).
+    or(FollowedUser.arel_table[:checked].eq(:false)))
   }
 
 end
