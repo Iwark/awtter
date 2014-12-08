@@ -203,6 +203,11 @@ class Account < ActiveRecord::Base
           next
         end
 
+        # 数字が6つ以上含まれるものはツイートしない（電話番号や郵便番号など）
+        if result[:text].gsub(/[^0-9]/,'').length >= 6
+          next
+        end
+
         begin
           client.update(result[:text])
         rescue => e
