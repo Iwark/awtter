@@ -1,6 +1,6 @@
 .auto-followers-count style="margin: 5px;"
-  | 自動化で取得したフォロワー数(最大48時間ほど時差あり) :
-  span style="margin-left:10px;"= FollowedUser.where(status:10, checked: true).count
+  | 自動化で取得したフォロワー数(調整中) :
+  span style="margin-left:10px;"= FollowedUser.by_status(:friend).count
 
 - @groups.each do |group|
   .group
