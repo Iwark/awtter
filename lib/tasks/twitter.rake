@@ -5,7 +5,7 @@ namespace :twitter do
   # :environment は モデルにアクセスするのに必須
   task follow: :environment do
     Account.next_follow_accounts().each do |account|
-      followed = account.follow_target_users(account.target)
+      followed = account.follow_target_users(account.target.name)
       if followed.length > 0
         puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{account.name} followed #{followed.length} accounts."
       end
