@@ -138,6 +138,11 @@ class Account < ActiveRecord::Base
           client.unfollow(user.user_id.to_i)
         rescue => e
           puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
+          if /exist/.match(e.to_s)
+            user.status = :deleted 
+            user.checked = true
+            user.save
+          end
           next
         ensure
         end

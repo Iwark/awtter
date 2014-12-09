@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
 
   # 一覧
   def index
-    @groups = Group.all
+    @groups = Group.all.includes(:accounts)
     @group = Group.new
     @account = Account.new
   end
