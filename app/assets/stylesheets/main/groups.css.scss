@@ -1,6 +1,6 @@
 .groups{
   .group{
-    width: 80%;
+    width: 90%;
     margin-bottom: 30px;
     .box{
       display: inline-block;
@@ -64,7 +64,7 @@
             display: inline-block;
             margin-left: 6px;
             font-size: 12px;
-            width: 180px;
+            width: 200px;
             overflow: hidden;
           }
           .follow{
@@ -94,7 +94,7 @@
           .edit{
             a{
               color: $link-color;
-              margin-left: 12px;
+              margin-left: 20px;
               font-size: 13px;
               font-weight: 600;
               &:hover{
@@ -103,7 +103,7 @@
             }
           }
           .delete{
-            margin-left: 12px;
+            margin-left: 20px;
             a{
               color: #ee3388;
               font-size: 13px;
