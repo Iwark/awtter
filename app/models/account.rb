@@ -115,8 +115,12 @@ class Account < ActiveRecord::Base
       begin
         is_friend = client.friendship?(client, user.user_id.to_i)
       rescue => e
-        puts "#{self.name} is_friend error:#{e}"
-        user.destroy! if /exist/.match(e.to_s)
+        puts "#{self.name} is_friend of #{user.user_id} error:#{e}"
+        if /exist/.match(e.to_s)
+          user.status = :deleted 
+          user.checked = true
+          user.save
+        end
         next
       ensure
       end
