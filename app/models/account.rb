@@ -137,7 +137,7 @@ class Account < ActiveRecord::Base
         begin
           client.unfollow(user.user_id.to_i)
         rescue => e
-          puts "#{self.name} unfollow failed:#{e}"
+          puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
           next
         ensure
         end
