@@ -26,6 +26,7 @@
 
 class Account < ActiveRecord::Base
 
+  # belongs_to :target
   belongs_to :group
   has_many :followed_users
   has_many :account_retweets
@@ -115,6 +116,7 @@ class Account < ActiveRecord::Base
         is_friend = client.friendship?(client, user.user_id.to_i)
       rescue => e
         puts "#{self.name} is_friend error:#{e}"
+        user.destroy! if /exist/.match(e.to_s)
         next
       ensure
       end
