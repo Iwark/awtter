@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208080601) do
+ActiveRecord::Schema.define(version: 20141209014754) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20141208080601) do
     t.datetime "auto_retweeted_at",   default: '2014-12-03 06:55:17'
     t.datetime "auto_tweeted_at",     default: '2014-12-04 10:24:06'
     t.boolean  "auto_tweet",          default: false
+    t.integer  "target_id"
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
