@@ -16,7 +16,7 @@
       ul
         - group.accounts.order(updated_at: :desc).each do |account|
           li
-            span.name
+            span.name style="#{'color: blue;' if account.target && account.target.status=='finished'}"
               = link_to account.name, "https://twitter.com/#{account.name}", target: '_blank'
               - target = account.target ? account.target.name : ''
               = " -> #{target}"
