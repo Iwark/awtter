@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209015403) do
+ActiveRecord::Schema.define(version: 20141209043120) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20141209015403) do
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   create_table "tweets", force: true do |t|

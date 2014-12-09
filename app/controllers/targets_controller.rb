@@ -50,6 +50,6 @@ class TargetsController < ApplicationController
     end
 
     def target_params
-      params.require(:target).permit(:name)
+      params.require(:target).permit(:name, :description)
     end
 end

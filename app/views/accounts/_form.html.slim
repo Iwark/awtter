@@ -39,7 +39,7 @@
       .col-sm-3
         = f.label :target_id, class: 'control-label'
       .col-sm-9
-        = f.select :target_id, Target.all.map{|t| [t.name, t.id]}, {prompt: 'ターゲットを選択', include_blank: true}, {class: 'form-control' }
+        = f.select :target_id, Target.by_status(:following).map{|t| ["#{t.name}(#{t.description})", t.id]}, {prompt: 'ターゲットを選択', include_blank: true}, {class: 'form-control' }
     .form-group.mt10
       .col-sm-3
         = f.label :description, class: 'control-label'

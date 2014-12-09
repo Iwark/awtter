@@ -24,3 +24,6 @@ ja:
         start_at: 開始時刻
         interval: リツイート間隔
         frequency: リツイート確率(%/分)
+      target:
+        name: ターゲット名
+        description: 備考
