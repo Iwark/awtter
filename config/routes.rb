@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   resources :histories, only:[:index]
   resources :retweets
   resources :tweets
+  resources :targets
 
 end

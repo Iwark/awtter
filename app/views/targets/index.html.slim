@@ -1,0 +1,21 @@
+table.table
+  thead
+    tr
+      th ターゲット
+      th ステータス
+      th
+      th
+  tbody
+    - @targets.each do |target|
+      tr
+        td= link_to target.name, "https://twitter.com/#{target.name}", target: '_blank'
+        td= target.status
+        td= link_to 'Show', target_path(target)
+        td= link_to 'Edit', edit_target_path(target)
+        td= link_to 'Destroy', target, method: :delete, data: { confirm: 'Are you sure?' }
+
+
+= paginate @targets
+
+br
+= link_to 'New Target', new_target_path, class: 'btn btn-primary'

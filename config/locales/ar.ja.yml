@@ -10,7 +10,7 @@ ja:
         api_secret: APIシークレット
         access_token: アクセストークン
         access_token_secret: アクセスシークレット
-        target: ターゲット
+        target_id: ターゲット
         description: 詳細
         auto_tweet: ツイート自動化
         auto_retweet: リツイート自動化

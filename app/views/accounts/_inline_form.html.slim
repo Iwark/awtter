@@ -12,6 +12,6 @@
       .col-xs-6= f.text_field :access_token, placeholder: 'Access Token'
       .col-xs-6= f.text_field :access_token_secret, placeholder: 'Access Secret'
     .row
-      .col-xs-6= f.text_field :target, placeholder: 'Target'
+      .col-xs-6= f.select :target_id, Target.all.map{|t| [t.name, t.id]}, {prompt: 'ターゲットを選択'}, {class: 'form-control' }
       .col-xs-6= f.text_field :description, placeholder: 'Description'
     div= f.submit 'Add'

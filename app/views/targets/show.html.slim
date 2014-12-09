@@ -1,0 +1,5 @@
+.show-target
+  h3 = @target.name
+  | ターゲッティング中のアカウント
+  - @target.accounts.each do |account|
+    .account= account.name

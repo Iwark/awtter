@@ -1,0 +1,10 @@
+.targets-form
+  = render 'errors/form_error', obj: @target
+  = form_for @target, html: { class: 'form-horizontal post-form' } do |f|
+    .form-group.mt10
+      .col-sm-3
+        = f.label :name, class: 'control-label'
+      .col-sm-9
+        = f.text_field :name, class: 'form-control'
+    .form-group.mt20.center
+      = f.submit '送信', class: 'btn btn-primary'

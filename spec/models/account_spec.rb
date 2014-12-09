@@ -8,7 +8,6 @@
 #  api_secret          :string(255)
 #  access_token        :string(255)
 #  access_token_secret :string(255)
-#  target              :string(255)
 #  description         :string(255)
 #  group_id            :integer
 #  created_at          :datetime
@@ -22,6 +21,7 @@
 #  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
 #  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
 #  auto_tweet          :boolean          default(FALSE)
+#  target_id           :integer
 #
 
 require 'rails_helper'

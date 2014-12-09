@@ -8,7 +8,6 @@
 #  api_secret          :string(255)
 #  access_token        :string(255)
 #  access_token_secret :string(255)
-#  target              :string(255)
 #  description         :string(255)
 #  group_id            :integer
 #  created_at          :datetime
@@ -22,6 +21,7 @@
 #  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
 #  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
 #  auto_tweet          :boolean          default(FALSE)
+#  target_id           :integer
 #
 
 class Account < ActiveRecord::Base
@@ -76,6 +76,13 @@ class Account < ActiveRecord::Base
     get_follow_count(client)
     get_followers_count(client)
     
+    if self.target.status == "finished"
+      puts "#{self.name} canceled following because target status is finished."
+      self.followed_at = DateTime.now
+      self.save
+      return []
+    end
+
     if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1 - 10
       puts "#{self.name} is under the 1.1 rule."
       self.followed_at = DateTime.now
@@ -338,6 +345,7 @@ class Account < ActiveRecord::Base
       i += 1
 
     end
+    self.target.update(status: :finished)
     puts "#{self.name} finished following the target followers."
     followed
   end
