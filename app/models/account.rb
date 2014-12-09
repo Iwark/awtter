@@ -26,7 +26,7 @@
 
 class Account < ActiveRecord::Base
 
-  # belongs_to :target
+  belongs_to :target
   belongs_to :group
   has_many :followed_users
   has_many :account_retweets

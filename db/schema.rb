@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209014754) do
+ActiveRecord::Schema.define(version: 20141209015403) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20141209014754) do
     t.string   "api_secret"
     t.string   "access_token"
     t.string   "access_token_secret"
-    t.string   "target"
     t.string   "description"
     t.integer  "group_id"
     t.datetime "created_at"
