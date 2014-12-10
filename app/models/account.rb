@@ -115,34 +115,42 @@ class Account < ActiveRecord::Base
   def unfollow_users(n=15)
     unfollowed = []
     client = self.get_client
+
+    friend_ids = []
+    follower_ids = []
+
+    begin
+      friend_ids = client.friend_ids.to_a
+      follower_ids = client.follower_ids.to_a
+    rescue => e
+      puts "#{self.name} failed to get info to unfollow users error:#{e}"
+      self.update(unfollowed_at: DateTime.now)
+      return []
+    ensure
+    end
+
     self.followed_users.old_ones.followed_or_not_checked.limit(n).each do |user|
       
-      # 友達になっているかどうかのチェック
-      is_friend = false
-      begin
-        is_friend = client.friendship?(client, user.user_id.to_i)
-      rescue => e
-        puts "#{self.name} is_friend of #{user.user_id} error:#{e}"
-        if /exist/.match(e.to_s)
-          user.status = :deleted 
-          user.checked = true
-          user.save
-        end
+      # フォロー中かどうか
+      is_friend = friend_ids.include?(user.user_id.to_i)
+
+      # フォロー中でなければ、リストから削除
+      unless is_friend
+        user.status = :deleted 
+        user.checked = true
+        user.save
         next
-      ensure
       end
 
-      unless is_friend
+      # フォロワーかどうか
+      is_follower = follower_ids.include?(user.user_id.to_i)
+
+      unless is_follower
         # フォロー解除
         begin
           client.unfollow(user.user_id.to_i)
         rescue => e
           puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
-          if /exist/.match(e.to_s)
-            user.status = :deleted 
-            user.checked = true
-            user.save
-          end
           next
         ensure
         end
