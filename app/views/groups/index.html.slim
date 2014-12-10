@@ -20,7 +20,7 @@
               = link_to account.name, "https://twitter.com/#{account.name}", target: '_blank'
               - target = account.target ? account.target.name : ''
               = " -> #{target}"
-            span.follow= "#{account.followed_users.by_status(:followed).count}/#{account.follow_num} follow"
+            span.follow= "#{account.followed_users.by_status(:followed).count}/#{account.followed_users.by_status(:friend).count}/#{account.follow_num} follow"
             span.unfollow= "#{account.followed_users.by_status(:unfollowed).count} unfollow"
             span.follower= "#{account.follower_num} follower"
             span.edit= link_to 'Edit', edit_account_path(account)
