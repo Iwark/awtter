@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
 
   # 一覧
   def index
-    Group.all.includes([accounts: [:target, :followed_users]])
+    @groups = Group.all.includes([accounts: [:target, :followed_users]])
     @group = Group.new
     @account = Account.new
   end
