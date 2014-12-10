@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209043120) do
+ActiveRecord::Schema.define(version: 20141210062020) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20141209043120) do
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
+  add_index "accounts", ["target_id"], name: "index_accounts_on_target_id", using: :btree
 
   create_table "followed_users", force: true do |t|
     t.integer  "account_id"
@@ -53,6 +54,9 @@ ActiveRecord::Schema.define(version: 20141209043120) do
     t.boolean  "checked"
     t.integer  "status"
   end
+
+  add_index "followed_users", ["account_id"], name: "index_followed_users_on_account_id", using: :btree
+  add_index "followed_users", ["status"], name: "index_followed_users_on_status", using: :btree
 
   create_table "groups", force: true do |t|
     t.string   "name"
