@@ -4,6 +4,12 @@ class GroupsController < ApplicationController
   # 一覧
   def index
     @groups = Group.all.includes([accounts: [:target, :followed_users]])
+    @followers_sum = 0
+    @groups.each do |group|
+      group.accounts.each do |account|
+        @followers_sum += account.follower_num
+      end
+    end
     @group = Group.new
     @account = Account.new
   end

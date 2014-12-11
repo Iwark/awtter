@@ -1,6 +1,9 @@
 .auto-followers-count style="margin: 5px;"
-  | 自動化で取得したフォロワー数(調整中) :
+  | 自動化で取得したフォロワー数:
   span style="margin-left:10px;"= FollowedUser.by_status(:friend).count
+.followers-sum style="margin: 5px;"
+  | 拡散力:
+  span style="margin-left:10px;"= @followers_sum
 
 - @groups.each do |group|
   .group
