@@ -1,5 +1,5 @@
-role :app, %w{awtter cclt-awtter}
-role :web, %w{awtter cclt-awtter}
+role :app, %w{awtter awtter2 cclt-awtter}
+role :web, %w{awtter awtter2 cclt-awtter}
 role :db,  %w{awtter cclt-awtter}
 
 set :stage, :production
