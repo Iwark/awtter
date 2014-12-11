@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  get '/health' => 'application#health'
+  
   root 'groups#index'
 
   resources :accounts
