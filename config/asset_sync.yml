@@ -1,0 +1,18 @@
+defaults: &defaults
+  fog_provider: 'AWS'
+  fog_directory: 'awtter-s3'
+  fog_region: 'ap-northeast-1'
+  aws_access_key_id: 'AKIAIJ5BKLP2Z3GK73YA'
+  aws_secret_access_key: '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'
+  existing_remote_files: delete
+  manifest: true
+  gzip_compression: true
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

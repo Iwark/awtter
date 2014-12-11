@@ -20,6 +20,7 @@ gem 'settingslogic'
 gem 'twitter'
 gem 'kaminari'
 gem "acts-as-taggable-on"
+gem "asset_sync"
 
 group :development do
   gem 'sqlite3'
