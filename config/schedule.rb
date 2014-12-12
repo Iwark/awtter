@@ -31,7 +31,7 @@ end
 
 # ログの同期
 every 1.minutes do
-  `rsync -av ~/awtter/shared/log/crontab.log awtter2:~/awtter/shared/log/crontab.log`
+  rake "cronlog:sync"
 end
 
 # フォロー
