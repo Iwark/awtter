@@ -31,6 +31,8 @@
                 span.edit= link_to 'Edit', edit_account_path(account)
                 span.delete= link_to 'Delete', account, method: :delete, data: { confirm: 'Are you sure?' }
         = render 'accounts/inline_form', account: @account, group: group
+= paginate @groups
+
 .new-group
   .title New Group
   =render 'groups/inline_form'
