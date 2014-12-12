@@ -6,7 +6,7 @@ class GroupsController < ApplicationController
     @groups = Group.all.includes([accounts: [:target, :followed_users]])
     @followers_sum = 0
     @groups.each do |group|
-      group.accounts.each do |account|
+      group.accounts.order(updated_at: :desc).each do |account|
         @followers_sum += account.follower_num
       end
     end
