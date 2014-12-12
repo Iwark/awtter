@@ -29,6 +29,11 @@ every 3.hours do
   puts "-- #{DateTime.now.strftime("%m/%d %H:%M")} cron is running"
 end
 
+# ログの同期
+every 1.minutes do
+  `rsync -av ~/awtter/shared/log/crontab.log awtter2:~/awtter/shared/log/crontab.log`
+end
+
 # フォロー
 every 3.minutes do
   rake "twitter:follow"
