@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
 
   # 一覧
   def index
-    @groups = Group.all.includes([accounts: [:target, :followed_users]]).per(5).page(params[:page])
+    @groups = Group.all.includes([accounts: [:target, :followed_users]])
     @followers_sum = 0
     @groups.each do |group|
       group.accounts.order(updated_at: :desc).each do |account|
