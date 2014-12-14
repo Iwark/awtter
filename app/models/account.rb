@@ -129,6 +129,13 @@ class Account < ActiveRecord::Base
     ensure
     end
 
+    # 片想われの検出
+    follower_ids.each do |follower_id|
+      if !FollowedUser.exists?(user_id: follower_id, account_id: self.id) && !friend_ids.include?(follower_id)
+        FollowedUser.create(user_id: follower_id, account_id: self.id, status:"follower", checked: true)
+      end
+    end
+
     self.followed_users.old_ones.followed_or_not_checked.limit(n).each do |user|
       
       # フォロー中かどうか
