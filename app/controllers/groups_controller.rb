@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
 
   # 一覧
   def index
-    @groups = Group.all.includes([accounts: [:target, :followed_users]])
+    @groups = Group.all.includes([accounts: [:target, :followed_users]]).per(3).page(params[:page])
     @followers_sum = PowerHistory.last.followers_sum
     @group = Group.new
     @account = Account.new
