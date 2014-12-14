@@ -130,9 +130,14 @@ class Account < ActiveRecord::Base
     end
 
     # 片想われの検出
+    i = 0
     follower_ids.each do |follower_id|
       if !FollowedUser.exists?(user_id: follower_id, account_id: self.id) && !friend_ids.include?(follower_id)
-        FollowedUser.create(user_id: follower_id, account_id: self.id, status:"follower", checked: true)
+        if i < 3
+          user = client.user(follower_id)
+          FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
+          i += 1
+        end
       end
     end
 
