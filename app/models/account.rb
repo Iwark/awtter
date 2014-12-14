@@ -180,6 +180,28 @@ class Account < ActiveRecord::Base
     unfollowed
   end
 
+  def follow_follower(user_id)
+    client = self.get_client
+    f = nil
+    begin
+      f = client.follow(user_id.to_i)
+    rescue => e
+      $stderr.puts "#{self.name} follow error:#{e}"
+    ensure
+    end
+
+    name = nil
+
+    if f.blank? || f[0].id.blank?
+      puts "#{self.name} failed to follow #{u} maybe this account is already followed."
+    else
+      name = f[0].name
+    end
+
+    FollowedUser.find_by(user_id: user_id).update(status: "followed")
+
+  end
+
   # 自動ツイートの作成
   def create_auto_tweet()
     client = self.get_client

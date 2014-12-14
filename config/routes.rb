@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   
   root 'groups#index'
 
+  get 'accounts/:id/follow_follower'
+
   resources :accounts
   resources :groups
 
