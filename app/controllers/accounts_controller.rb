@@ -45,6 +45,7 @@ class AccountsController < ApplicationController
 
   def follow_follower
     @account.follow_follower(params[:user_id])
+    redirect_to :back
   end
 
   private

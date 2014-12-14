@@ -7,5 +7,5 @@ h3 片想われ一覧
 - @account.followed_users.by_status(:follower).each do |follower|
   = link_to follower.name, "https://twitter.com/#{follower.name}", target: '_blank'
   span style="margin-left: 10px;"
-  = link_to "/accounts/#{@account.id}/follow_follower?user_id=#{follower.user_id}"
+  = link_to "follow", "/accounts/#{@account.id}/follow_follower?user_id=#{follower.user_id}"
   br
