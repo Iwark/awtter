@@ -342,7 +342,6 @@ class Account < ActiveRecord::Base
       next if !user
 
       if user.protected?
-        puts "#{self.name} canceled following #{u} because it is protected."
         FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
         i += 1
         next
