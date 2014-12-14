@@ -2,7 +2,7 @@ h3= @account.name
 
 = link_to 'Twitter', "https://twitter.com/#{@account.name}", target: '_blank'
 
-h3 片想われ一覧(作成中)
+h3 片想われ一覧
 
 - @account.followed_users.by_status(:follower).each do |follower|
   = link_to follower.name, "https://twitter.com/#{follower.name}", target: '_blank'
