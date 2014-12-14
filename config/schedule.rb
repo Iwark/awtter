@@ -29,6 +29,10 @@ every 1.minutes do
   rake "cronlog:sync", :output => {:error => 'log/sync.log', :standard => 'log/sync.log'}
 end
 
+every 5.minutes do
+  rake "power:create"
+end
+
 # フォロー
 every 4.minutes do
   rake "twitter:follow", :output => {:error => 'log/error.log', :standard => 'log/history.log'}

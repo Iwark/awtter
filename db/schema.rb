@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210062020) do
+ActiveRecord::Schema.define(version: 20141214084549) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -60,6 +60,12 @@ ActiveRecord::Schema.define(version: 20141210062020) do
 
   create_table "groups", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "power_histories", force: true do |t|
+    t.integer  "followers_sum"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

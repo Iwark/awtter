@@ -5,5 +5,5 @@ h3= @account.name
 h3 片想われ一覧
 
 - FollowedUser.by_status(:follower).each do |follower|
-  = link_to folloser.user_id, "https://twitter.com/#{follower.user_id}"
+  = link_to follower.user_id, "https://twitter.com/#{follower.user_id}"
   br

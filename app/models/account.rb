@@ -99,7 +99,7 @@ class Account < ActiveRecord::Base
     begin
       follower_ids = client.follower_ids(user, count: 5000)
     rescue => e
-      puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
+      logger.error "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
       return []
     ensure
     end
@@ -123,7 +123,7 @@ class Account < ActiveRecord::Base
       friend_ids = client.friend_ids.to_a
       follower_ids = client.follower_ids.to_a
     rescue => e
-      puts "#{self.name} failed to get info to unfollow users error:#{e}"
+      logger.error "#{self.name} failed to get info to unfollow users error:#{e}"
       self.update(unfollowed_at: DateTime.now)
       return []
     ensure
@@ -157,7 +157,7 @@ class Account < ActiveRecord::Base
         begin
           client.unfollow(user.user_id.to_i)
         rescue => e
-          puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
+          logger.error "#{self.name} unfollow #{user.user_id} failed:#{e}"
           next
         ensure
         end
@@ -188,7 +188,7 @@ class Account < ActiveRecord::Base
     begin
       results = client.search(tag).to_h[:statuses]
     rescue => e
-      puts "#{self.name} search tweets failed:#{e}"
+      logger.error "#{self.name} search tweets failed:#{e}"
       return
     ensure
     end
@@ -253,7 +253,7 @@ class Account < ActiveRecord::Base
         begin
           client.update(result[:text])
         rescue => e
-          puts "#{self.name} tweet failed:#{e}"
+          logger.error "#{self.name} tweet failed:#{e}"
           return
         ensure
         end
@@ -291,7 +291,7 @@ class Account < ActiveRecord::Base
     begin
       client.retweet(retweet.status_id)
     rescue => e
-      puts "#{self.name} retweet error:#{e}"
+      logger.error "#{self.name} retweet error:#{e}"
       return
     ensure
     end
@@ -305,7 +305,7 @@ class Account < ActiveRecord::Base
     begin
       user = client.user(target)
     rescue => e
-      puts "finding user of #{self.name} target(#{target}) error:#{e}"
+      logger.error "finding user of #{self.name} target(#{target}) error:#{e}"
       return nil
     ensure
     end
@@ -347,7 +347,7 @@ class Account < ActiveRecord::Base
       begin
         f = client.follow(u)
       rescue => e
-        puts "#{self.name} follow error:#{e}"
+        logger.error "#{self.name} follow error:#{e}"
         return followed if /limit/.match(e.to_s)
       ensure
       end
