@@ -26,7 +26,7 @@ set :environment, :production
 
 # ログの同期
 every 1.minutes do
-  rake "cronlog:sync"
+  rake "cronlog:sync", :output => {:error => 'log/error.log', :standard => 'log/cron.log'}
 end
 
 # フォロー
