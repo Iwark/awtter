@@ -99,7 +99,7 @@ class Account < ActiveRecord::Base
     begin
       follower_ids = client.follower_ids(user, count: 5000)
     rescue => e
-      puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
+      $stderr.puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
       return []
     ensure
     end
@@ -123,10 +123,22 @@ class Account < ActiveRecord::Base
       friend_ids = client.friend_ids.to_a
       follower_ids = client.follower_ids.to_a
     rescue => e
-      puts "#{self.name} failed to get info to unfollow users error:#{e}"
+      $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
       self.update(unfollowed_at: DateTime.now)
       return []
     ensure
+    end
+
+    # 片想われの検出
+    i = 0
+    follower_ids.each do |follower_id|
+      if !FollowedUser.exists?(user_id: follower_id, account_id: self.id) && !friend_ids.include?(follower_id)
+        if i < 3
+          user = client.user(follower_id)
+          FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
+          i += 1
+        end
+      end
     end
 
     self.followed_users.old_ones.followed_or_not_checked.limit(n).each do |user|
@@ -150,7 +162,7 @@ class Account < ActiveRecord::Base
         begin
           client.unfollow(user.user_id.to_i)
         rescue => e
-          puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
+          $stderr.puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
           next
         ensure
         end
@@ -168,6 +180,28 @@ class Account < ActiveRecord::Base
     unfollowed
   end
 
+  def follow_follower(user_id)
+    client = self.get_client
+    f = nil
+    begin
+      f = client.follow(user_id.to_i)
+    rescue => e
+      $stderr.puts "#{self.name} follow error:#{e}"
+    ensure
+    end
+
+    name = nil
+
+    if f.blank? || f[0].id.blank?
+      puts "#{self.name} failed to follow #{u} maybe this account is already followed."
+    else
+      name = f[0].name
+    end
+
+    FollowedUser.find_by(user_id: user_id).update(status: "followed")
+
+  end
+
   # 自動ツイートの作成
   def create_auto_tweet()
     client = self.get_client
@@ -181,7 +215,7 @@ class Account < ActiveRecord::Base
     begin
       results = client.search(tag).to_h[:statuses]
     rescue => e
-      puts "#{self.name} search tweets failed:#{e}"
+      $stderr.puts "#{self.name} search tweets failed:#{e}"
       return
     ensure
     end
@@ -246,7 +280,7 @@ class Account < ActiveRecord::Base
         begin
           client.update(result[:text])
         rescue => e
-          puts "#{self.name} tweet failed:#{e}"
+          $stderr.puts "#{self.name} tweet failed:#{e}"
           return
         ensure
         end
@@ -284,7 +318,7 @@ class Account < ActiveRecord::Base
     begin
       client.retweet(retweet.status_id)
     rescue => e
-      puts "#{self.name} retweet error:#{e}"
+      $stderr.puts "#{self.name} retweet error:#{e}"
       return
     ensure
     end
@@ -298,7 +332,7 @@ class Account < ActiveRecord::Base
     begin
       user = client.user(target)
     rescue => e
-      puts "finding user of #{self.name} target(#{target}) error:#{e}"
+      $stderr.puts "finding user of #{self.name} target(#{target}) error:#{e}"
       return nil
     ensure
     end
@@ -330,7 +364,6 @@ class Account < ActiveRecord::Base
       next if !user
 
       if user.protected?
-        puts "#{self.name} canceled following #{u} because it is protected."
         FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
         i += 1
         next
@@ -340,7 +373,7 @@ class Account < ActiveRecord::Base
       begin
         f = client.follow(u)
       rescue => e
-        puts "#{self.name} follow error:#{e}"
+        $stderr.puts "#{self.name} follow error:#{e}"
         return followed if /limit/.match(e.to_s)
       ensure
       end

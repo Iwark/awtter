@@ -1,3 +1,12 @@
 .histories
-  - @log_lines.each do |line|
-    == simple_format line
+  a style="cursor: pointer;" onclick="$('.history-logs').show();$('.error-logs').hide();" Histories
+  span style="margin-left: 20px;"
+  a style="cursor: pointer;" onclick="$('.error-logs').show();$('.history-logs').hide();" Errors
+
+  .history-logs style="display:none;"
+    - @histories.each do |line|
+      == simple_format line
+
+  .error-logs style="display:none;"
+    - @errors.each do |line|
+      == simple_format line

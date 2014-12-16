@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:show, :edit, :update, :destroy]
+  before_action :set_account, only: [:show, :edit, :update, :destroy, :follow_follower]
 
   # 一覧
   def index
@@ -41,6 +41,11 @@ class AccountsController < ApplicationController
   def destroy
     @account.destroy
     redirect_to root_url, notice: 'Account was successfully destroyed.'
+  end
+
+  def follow_follower
+    @account.follow_follower(params[:user_id])
+    redirect_to :back
   end
 
   private

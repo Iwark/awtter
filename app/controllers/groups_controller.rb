@@ -3,13 +3,8 @@ class GroupsController < ApplicationController
 
   # 一覧
   def index
-    @groups = Group.all.includes([accounts: [:target, :followed_users]])
-    @followers_sum = 0
-    @groups.each do |group|
-      group.accounts.order(updated_at: :desc).each do |account|
-        @followers_sum += account.follower_num
-      end
-    end
+    @groups = Group.all.includes([accounts: [:target, :followed_users]]).page(params[:page]).per(3)
+    @followers_sum = PowerHistory.last.followers_sum if PowerHistory.count > 0
     @group = Group.new
     @account = Account.new
   end
