@@ -305,7 +305,7 @@ class Account < ActiveRecord::Base
   end
 
   def check_tweet(text)
-    if text.match(/(セフレ|エロ|サクラ|無料|神アプリ|万円|アフィリエイト|ゲーム|iOS|And|メアド|番号|アプリ|LINE)/i)
+    if text.match(/(セフレ|エロ|サクラ|無料|神アプリ|万円|アフィリエイト|ゲーム|iOS|And|メアド|番号|アプリ|LINE|変態)/i)
       return false
     else
       return true

@@ -35,7 +35,8 @@ namespace :twitter do
     # 朝8時まではリツイートしない
     unless DateTime.now.hour < 8
       Account.next_auto_retweet_accounts().each do |account|
-        account.create_auto_retweet()
+        # 5%の確率でリツイート
+        account.create_auto_retweet() if rand(100) < 5
       end
     end
   end
