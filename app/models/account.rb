@@ -51,12 +51,12 @@ class Account < ActiveRecord::Base
 
   # 前回followしてから72分以上経った、
   # targetのあるアカウントをn個取得する
-  def self.next_follow_accounts(n=15)
+  def self.next_follow_accounts(n=30)
     self.where.not(target: ["", nil]).where("followed_at < ?", DateTime.now - 72.minutes).order(:followed_at).limit(n)
   end
 
   # 前回unfollowしてから120分以上経ったアカウントをn個取得する
-  def self.next_unfollow_accounts(n=15)
+  def self.next_unfollow_accounts(n=30)
     self.where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
   end
 
