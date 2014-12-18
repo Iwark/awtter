@@ -11,8 +11,9 @@ class HistoriesController < ApplicationController
     @errors = lg[-100..-1] if lg.length > 100
 
     @chart_data = {}
+    # keys = {}
     PowerHistory.where("created_at > ?", 7.days.ago).group(:created_at).sum(:followers_sum).each do |k, v|
-      key = k.to_date.strftime("%m%d")
+      key = k.to_date.strftime("%y%m%d")
       @chart_data[key] = v
     end
   end
