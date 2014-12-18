@@ -14,4 +14,4 @@
       == simple_format line
 
   .history-ref.chart style="display:none;"
-    = line_chart PowerHistory.where("created_at > ?", 7.days.ago).group(:created_at).sum(:followers_sum)
+    = line_chart @chart_data, library: {html:'<div id="%{id}" style="width: 100%; height: %{height};">Loading...</div>'}
