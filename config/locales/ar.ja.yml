@@ -12,6 +12,8 @@ ja:
         access_token_secret: アクセスシークレット
         target_id: ターゲット
         description: 詳細
+        auto_follow: フォロー自動化
+        auto_unfollow: アンフォロー自動化
         auto_tweet: ツイート自動化
         auto_retweet: リツイート自動化
         tag_list: キーワード

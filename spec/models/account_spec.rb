@@ -22,6 +22,8 @@
 #  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
 #  auto_tweet          :boolean          default(FALSE)
 #  target_id           :integer
+#  auto_follow         :boolean          default(TRUE)
+#  auto_unfollow       :boolean          default(TRUE)
 #
 
 require 'rails_helper'

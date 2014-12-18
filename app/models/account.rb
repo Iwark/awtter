@@ -22,6 +22,8 @@
 #  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
 #  auto_tweet          :boolean          default(FALSE)
 #  target_id           :integer
+#  auto_follow         :boolean          default(TRUE)
+#  auto_unfollow       :boolean          default(TRUE)
 #
 
 class Account < ActiveRecord::Base
@@ -52,12 +54,12 @@ class Account < ActiveRecord::Base
   # 前回followしてから72分以上経った、
   # targetのあるアカウントをn個取得する
   def self.next_follow_accounts(n=30)
-    self.where.not(target: ["", nil]).where("followed_at < ?", DateTime.now - 72.minutes).order(:followed_at).limit(n)
+    self.where(auto_follow: true).where.not(target: ["", nil]).where("followed_at < ?", DateTime.now - 72.minutes).order(:followed_at).limit(n)
   end
 
   # 前回unfollowしてから120分以上経ったアカウントをn個取得する
   def self.next_unfollow_accounts(n=30)
-    self.where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
+    self.where(auto_unfollow: true).where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
   end
 
   # 前回auto_tweetしてから7分以上経ったアカウントをn個取得する

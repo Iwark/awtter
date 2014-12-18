@@ -47,6 +47,28 @@
         = f.text_area :description, class: 'form-control'
     .form-group.mt10
       .col-sm-3
+        = f.label :auto_follow, class: 'control-label'
+      .col-sm-9
+        .btn-group.btn-toggle data-toggle="buttons"
+          label.btn.btn-default
+            = f.radio_button :auto_follow, true
+            | する
+          label.btn.btn-default
+            = f.radio_button :auto_follow, false
+            | しない
+    .form-group.mt10
+      .col-sm-3
+        = f.label :auto_unfollow, class: 'control-label'
+      .col-sm-9
+        .btn-group.btn-toggle data-toggle="buttons"
+          label.btn.btn-default
+            = f.radio_button :auto_unfollow, true
+            | する
+          label.btn.btn-default
+            = f.radio_button :auto_unfollow, false
+            | しない
+    .form-group.mt10
+      .col-sm-3
         = f.label :auto_tweet, class: 'control-label'
       .col-sm-9
         .btn-group.btn-toggle data-toggle="buttons"
