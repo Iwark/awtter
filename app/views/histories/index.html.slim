@@ -3,7 +3,7 @@
   span style="margin-left: 20px;"
   a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.error-logs').show();" Errors
   span style="margin-left: 20px;"
-  a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.chart').show();" Chart
+  a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.chart').css('opacity',1.0);$('.chart').show();" Chart
 
   .history-ref.history-logs style="display:none;"
     - @histories.each do |line|
@@ -13,6 +13,5 @@
     - @errors.each do |line|
       == simple_format line
 
-  .history-ref.chart style="display:none;"
-    -cache @chart_data do
-      = line_chart @chart_data, library: {html:'<div id="%{id}" style="width: 100%; height: 300px;">Loading...</div>'}
+  .history-ref.chart style="opacity: 0.0;"
+    = line_chart @chart_data, library: {html:'<div id="%{id}" style="width: 100%; height: 300px;">Loading...</div>'}
