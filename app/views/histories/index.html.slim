@@ -1,12 +1,17 @@
 .histories
-  a style="cursor: pointer;" onclick="$('.history-logs').show();$('.error-logs').hide();" Histories
+  a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.history-logs').show();" Histories
   span style="margin-left: 20px;"
-  a style="cursor: pointer;" onclick="$('.error-logs').show();$('.history-logs').hide();" Errors
+  a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.error-logs').show();" Errors
+  span style="margin-left: 20px;"
+  a style="cursor: pointer;" onclick="$('.history-ref').hide();$('.chart').show();" Chart
 
-  .history-logs style="display:none;"
+  .history-ref.history-logs style="display:none;"
     - @histories.each do |line|
       == simple_format line
 
-  .error-logs style="display:none;"
+  .history-ref.error-logs style="display:none;"
     - @errors.each do |line|
       == simple_format line
+
+  .history-ref.chart style="display:none;"
+    = line_chart PowerHistory.where("created_at > ?", 7.days.ago).group(:created_at).sum(:followers_sum)

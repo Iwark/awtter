@@ -9,7 +9,6 @@ class HistoriesController < ApplicationController
     lg = IO.readlines("log/error.log")
     @errors = lg
     @errors = lg[-100..-1] if lg.length > 100
-
   end
 
 end
