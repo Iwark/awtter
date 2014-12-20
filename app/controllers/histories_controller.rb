@@ -16,4 +16,14 @@ class HistoriesController < ApplicationController
     end
   end
 
+  # クリア
+  def clear
+    file_name = "log/error.log"    #保存するファイル名
+
+    File.open(file_name, 'w') {|file|
+     file.write DateTime.now.strftime("----- cleared %m/%d %H:%M")
+    }
+    redirect_to '/histories'
+  end
+
 end

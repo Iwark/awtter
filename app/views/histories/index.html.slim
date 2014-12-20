@@ -10,6 +10,7 @@
       == simple_format line
 
   .history-ref.error-logs style="display:none;"
+    = link_to 'clear', '/histories/clear', method: :post
     - @errors.each do |line|
       == simple_format line
 
