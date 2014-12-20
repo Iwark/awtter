@@ -33,19 +33,19 @@ ActiveRecord::Schema.define(version: 20141218104036) do
     t.integer  "pattern"
     t.integer  "follower_num",        default: 0
     t.integer  "follow_num",          default: 0
-    t.datetime "followed_at",         default: '2014-12-02 01:25:53'
-    t.datetime "unfollowed_at",       default: '2014-12-02 01:25:53'
+    t.datetime "followed_at",         default: '2014-12-04 00:20:57'
+    t.datetime "unfollowed_at",       default: '2014-12-04 00:20:57'
     t.boolean  "auto_retweet",        default: false
-    t.datetime "auto_retweeted_at",   default: '2014-12-03 06:55:17'
-    t.datetime "auto_tweeted_at",     default: '2014-12-04 10:24:06'
+    t.datetime "auto_retweeted_at",   default: '2014-12-04 00:20:57'
+    t.datetime "auto_tweeted_at",     default: '2014-12-07 06:27:11'
     t.boolean  "auto_tweet",          default: false
     t.integer  "target_id"
     t.boolean  "auto_follow",         default: true
     t.boolean  "auto_unfollow",       default: true
   end
 
-  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id", using: :btree
-  add_index "accounts", ["target_id"], name: "index_accounts_on_target_id", using: :btree
+  add_index "accounts", ["group_id"], name: "index_accounts_on_group_id"
+  add_index "accounts", ["target_id"], name: "index_accounts_on_target_id"
 
   create_table "followed_users", force: true do |t|
     t.integer  "account_id"
@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(version: 20141218104036) do
     t.integer  "status"
   end
 
-  add_index "followed_users", ["account_id"], name: "index_followed_users_on_account_id", using: :btree
-  add_index "followed_users", ["status"], name: "index_followed_users_on_status", using: :btree
+  add_index "followed_users", ["account_id"], name: "index_followed_users_on_account_id"
+  add_index "followed_users", ["status"], name: "index_followed_users_on_status"
 
   create_table "groups", force: true do |t|
     t.string   "name"
@@ -84,8 +84,8 @@ ActiveRecord::Schema.define(version: 20141218104036) do
     t.integer  "account_id", default: 0
   end
 
-  add_index "retweets", ["group_id"], name: "index_retweets_on_group_id", using: :btree
-  add_index "retweets", ["status"], name: "index_retweets_on_status", using: :btree
+  add_index "retweets", ["group_id"], name: "index_retweets_on_group_id"
+  add_index "retweets", ["status"], name: "index_retweets_on_status"
 
   create_table "statements", force: true do |t|
     t.string   "contents"
@@ -105,15 +105,15 @@ ActiveRecord::Schema.define(version: 20141218104036) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
 
   create_table "tags", force: true do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
 
   create_table "targets", force: true do |t|
     t.string   "name"

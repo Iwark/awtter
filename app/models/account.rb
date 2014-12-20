@@ -123,6 +123,14 @@ class Account < ActiveRecord::Base
 
     begin
       friend_ids = client.friend_ids.to_a
+    rescue => e
+      $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
+      self.update(unfollowed_at: DateTime.now)
+      return []
+    ensure
+    end
+
+    begin
       follower_ids = client.follower_ids.to_a
     rescue => e
       $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
@@ -136,7 +144,7 @@ class Account < ActiveRecord::Base
     follower_ids.each do |follower_id|
       if !FollowedUser.exists?(user_id: follower_id, account_id: self.id) && !friend_ids.include?(follower_id)
         if i < 3
-          user = client.user(follower_id)
+          user = get_user(client, follower_id)
           FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
           i += 1
         end
