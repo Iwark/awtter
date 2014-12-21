@@ -147,6 +147,8 @@ class Account < ActiveRecord::Base
           if user = get_user(client, follower_id)
             FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
             i += 1
+          else
+            FollowedUser.create(user_id: follower_id, account_id: self.id, status:"deleted", checked: true)
           end
         end
       end
@@ -372,7 +374,10 @@ class Account < ActiveRecord::Base
       next if FollowedUser.exists?(user_id: u)
 
       user = get_user(client, u)
-      next if !user
+      if !user
+        FollowedUser.create(user_id: u, account_id: self.id, status:"deleted", checked: true)
+        next
+      end
 
       if user.protected?
         FollowedUser.create(user_id: u.to_i, account_id: self.id, status:"protecting", checked: true)
