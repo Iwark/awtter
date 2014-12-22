@@ -34,26 +34,26 @@ every 5.minutes do
 end
 
 # フォロー
-every 4.minutes do
+every 5.minutes do
   rake "twitter:follow", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # フォロー解除
-every 16.minutes do
+every 21.minutes do
   rake "twitter:unfollow", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # ツイート自動化
-every 7.minutes do
+every 8.minutes do
   rake "twitter:auto_tweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # リツイート
-every 2.minutes do 
+every 3.minutes do 
   rake "twitter:retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # リツイート自動化
-every 26.minutes do
+every 29.minutes do
   rake "twitter:auto_retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
