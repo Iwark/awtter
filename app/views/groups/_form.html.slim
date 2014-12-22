@@ -10,7 +10,7 @@
       .col-sm-3
         = f.label :server_id
       .col-sm-9
-        = f.select :server_id, Group.server_ids, {}, {class: 'form-control' }
+        = f.select :server_id, Group.server_ids.map{|sid| [sid[0],sid[0]]}, {}, {class: 'form-control' }
       .col-xs-2
     .form-group.mt10
       .col-sm-3
