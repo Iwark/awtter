@@ -19,6 +19,7 @@ ja:
         tag_list: キーワード
       group:
         name: グループ名
+        server_id: サーバー
         tag_list: キーワード
       retweet:
         group_id: グループ

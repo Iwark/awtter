@@ -1,6 +1,7 @@
 defaults: &defaults
   site:
     title: Awtter
+  sever_id: 0
 
 development:
   <<: *defaults

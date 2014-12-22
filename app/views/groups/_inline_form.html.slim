@@ -2,7 +2,8 @@
   = render 'errors/form_error', obj: @group
   = form_for @group, html: { class: 'form-horizontal post-form' } do |f|
     .form-group.mt10
-      .col-xs-8
+      .col-xs-5
         = f.text_field :name, class: 'form-control', placeholder: 'グループ名'
+      .col-xs-3= f.select :server_id, Group.server_ids, {}, {class: 'form-control' }
       .col-xs-2
         = f.submit '送信'

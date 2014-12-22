@@ -37,11 +37,41 @@ class Account < ActiveRecord::Base
 
   acts_as_taggable
 
-  # validates :api_key, length: { is: 21 }
-  # validates :api_secret, length: { is: 42 }
-  # validates :access_token, length: { is: 50 }
-  # validates :access_token_secret, length: { is: 42 }
+  # 前回followしてから66分以上経った、
+  # targetのあるアカウントをn個取得する
+  scope :next_follow_accounts, -> n=30 {
+    where(auto_follow: true).
+    where.not(target: ["", nil]).
+    where(arel_table[:followed_at].lt 66.minutes.ago).
+    order(:followed_at).
+    limit(n)
+  }
 
+  # 前回unfollowしてから120分以上経ったアカウントをn個取得する
+  scope :next_unfollow_accounts, -> n=30 {
+    where(auto_unfollow: true).
+    where(arel_table[:unfollowed_at].lt 72.minutes.ago).
+    order(:unfollowed_at).
+    limit(n)
+  }
+
+  # 前回tweetしてから7分以上経ったアカウントをn個取得する
+  scope :next_auto_tweet_accounts, -> n=15 {
+    where(auto_tweet: true).
+    where(arel_table[:auto_tweeted_at].lt 7.minutes.ago).
+    order(:auto_tweeted_at).
+    limit(n)
+  }
+
+  # 前回auto_retweetしてから3時間以上経ったアカウントをn個取得する
+  scope :next_auto_retweet_accounts, -> n=15 {
+    where(auto_retweet: true).
+    where(arel_table[:auto_retweeted_at].lt 3.hours.ago).
+    order(:auto_retweeted_at).
+    limit(n)
+  }
+
+  # クライアントの取得
   def get_client
     Twitter::REST::Client.new do |config|
       config.consumer_key        = self.api_key
@@ -49,27 +79,6 @@ class Account < ActiveRecord::Base
       config.access_token        = self.access_token
       config.access_token_secret = self.access_token_secret
     end
-  end
-
-  # 前回followしてから72分以上経った、
-  # targetのあるアカウントをn個取得する
-  def self.next_follow_accounts(n=30)
-    self.where(auto_follow: true).where.not(target: ["", nil]).where("followed_at < ?", DateTime.now - 72.minutes).order(:followed_at).limit(n)
-  end
-
-  # 前回unfollowしてから120分以上経ったアカウントをn個取得する
-  def self.next_unfollow_accounts(n=30)
-    self.where(auto_unfollow: true).where("unfollowed_at < ?", DateTime.now - 120.minutes).order(:unfollowed_at).limit(n)
-  end
-
-  # 前回auto_tweetしてから7分以上経ったアカウントをn個取得する
-  def self.next_auto_tweet_accounts(n=15)
-    self.where("auto_tweet = true and auto_tweeted_at < ?", DateTime.now - 7.minutes).order(:auto_tweeted_at).limit(n)
-  end
-
-  # 前回auto_retweetしてから3時間以上経ったアカウントをn個取得する
-  def self.next_auto_retweet_accounts(n=15)
-    self.where("auto_retweet = true and auto_retweeted_at < ?", DateTime.now - 3.hours).order(:auto_retweeted_at).limit(n)
   end
 
   # ターゲットを10人までfollowする

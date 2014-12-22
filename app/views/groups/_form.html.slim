@@ -8,6 +8,12 @@
         = f.text_field :name, class: 'form-control', placeholder: 'グループ名'
     .form-group.mt10
       .col-sm-3
+        = f.label :server_id
+      .col-sm-9
+        = f.select :server_id, Group.server_ids, {}, {class: 'form-control' }
+      .col-xs-2
+    .form-group.mt10
+      .col-sm-3
         = f.label :tag_list, class: 'control-label'
       .col-sm-9
         .tags
