@@ -74,7 +74,7 @@ class Account < ActiveRecord::Base
   # 前回target_auto_retweetしてから12時間以上経ったアカウントをn個取得する
   scope :next_target_auto_retweet_accounts, -> n=15 {
     where.not(auto_retweet_target: ["", nil]).
-    where(arel_table[:target_auto_retweeted_at].lt 3.hours.ago).
+    where(arel_table[:target_auto_retweeted_at].lt 12.hours.ago).
     order(:target_auto_retweeted_at).
     limit(n)
   }
