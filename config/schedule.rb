@@ -57,3 +57,7 @@ end
 every 29.minutes do
   rake "twitter:auto_retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
+
+every 14.minutes do
+  rake "twitter:target_auto_retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
+end

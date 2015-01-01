@@ -49,6 +49,15 @@ namespace :twitter do
     end
   end
 
+  task target_auto_retweet: :environment do
+    Group.server(Settings.server_id).includes(:accounts).each do |group|
+      group.accounts.next_target_auto_retweet_accounts.each do |account|
+        # 1%の確率でリツイート
+        account.create_target_auto_retweet() if rand(100) < 1
+      end
+    end
+  end
+
   task retweet: :environment do
     # メインのみ
     if Settings.server_id == 1

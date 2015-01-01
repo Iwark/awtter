@@ -71,6 +71,14 @@ class Account < ActiveRecord::Base
     limit(n)
   }
 
+  # 前回target_auto_retweetしてから12時間以上経ったアカウントをn個取得する
+  scope :next_target_auto_retweet_accounts, -> n=15 {
+    where.not(auto_retweet_target: ["", nil]).
+    where(arel_table[:target_auto_retweeted_at].lt 3.hours.ago).
+    order(:target_auto_retweeted_at).
+    limit(n)
+  }
+
   # クライアントの取得
   def get_client
     Twitter::REST::Client.new do |config|
@@ -323,6 +331,16 @@ class Account < ActiveRecord::Base
         self.update(auto_retweeted_at: DateTime.now)
         return
       end
+    end
+  end
+
+  # 自動ターゲットリツイートの作成
+  def create_target_auto_retweet()
+    client = self.get_client
+    user = get_user(client, self.auto_retweet_target)
+    if user
+      Retweet.create(url: user.status.url.to_s, account_id: self.id, start_at: DateTime.now, interval: 0, frequency: 25)
+      self.update(target_auto_retweeted_at: DateTime.now)
     end
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141222025524) do
+ActiveRecord::Schema.define(version: 20150101061738) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -31,17 +31,19 @@ ActiveRecord::Schema.define(version: 20141222025524) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "pattern"
-    t.integer  "follower_num",        default: 0
-    t.integer  "follow_num",          default: 0
-    t.datetime "followed_at",         default: '2014-12-04 00:20:57'
-    t.datetime "unfollowed_at",       default: '2014-12-04 00:20:57'
-    t.boolean  "auto_retweet",        default: false
-    t.datetime "auto_retweeted_at",   default: '2014-12-04 00:20:57'
-    t.datetime "auto_tweeted_at",     default: '2014-12-07 06:27:11'
-    t.boolean  "auto_tweet",          default: false
+    t.integer  "follower_num",             default: 0
+    t.integer  "follow_num",               default: 0
+    t.datetime "followed_at",              default: '2014-12-04 00:20:57'
+    t.datetime "unfollowed_at",            default: '2014-12-04 00:20:57'
+    t.boolean  "auto_retweet",             default: false
+    t.datetime "auto_retweeted_at",        default: '2014-12-04 00:20:57'
+    t.datetime "auto_tweeted_at",          default: '2014-12-07 06:27:11'
+    t.boolean  "auto_tweet",               default: false
     t.integer  "target_id"
-    t.boolean  "auto_follow",         default: true
-    t.boolean  "auto_unfollow",       default: true
+    t.boolean  "auto_follow",              default: true
+    t.boolean  "auto_unfollow",            default: true
+    t.string   "auto_retweet_target"
+    t.datetime "target_auto_retweeted_at", default: '2015-01-01 06:31:46'
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id"
