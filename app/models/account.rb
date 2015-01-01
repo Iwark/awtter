@@ -138,8 +138,10 @@ class Account < ActiveRecord::Base
     friend_ids = []
     follower_ids = []
 
+    user = get_user(client, self.name)
+
     begin
-      friend_ids = client.friend_ids.to_a
+      friend_ids = client.friend_ids(user).to_a
     rescue => e
       $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
       self.update(unfollowed_at: DateTime.now)
@@ -148,7 +150,7 @@ class Account < ActiveRecord::Base
     end
 
     begin
-      follower_ids = client.follower_ids.to_a
+      follower_ids = client.follower_ids(user).to_a
     rescue => e
       $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
       self.update(unfollowed_at: DateTime.now)
@@ -381,14 +383,14 @@ class Account < ActiveRecord::Base
 
   # フォローの数を取得
   def get_follow_count(client)
-    user = get_user(client)
+    user = get_user(client, self.name)
     return unless user
     self.follow_num = user.friends_count
   end
 
   # フォロワーの数を取得
   def get_followers_count(client)
-    user = get_user(client)
+    user = get_user(client, self.name)
     return unless user
     self.follower_num = user.followers_count
   end
