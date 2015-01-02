@@ -161,7 +161,8 @@ class Account < ActiveRecord::Base
     # 片想われの検出
     i = 0
     follower_ids.each do |follower_id|
-      if !FollowedUser.exists?(user_id: follower_id, account_id: self.id) && !friend_ids.include?(follower_id)
+      followed_user = FollowedUser.find_by(user_id: follower_id, account_id: self.id)
+      if !followed_user && !friend_ids.include?(follower_id)
         if i < 3
           if user = get_user(client, follower_id)
             FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
@@ -169,6 +170,12 @@ class Account < ActiveRecord::Base
           else
             FollowedUser.create(user_id: follower_id, account_id: self.id, status:"deleted", checked: true)
           end
+        end
+      elsif friend_ids.include?(follower_id)
+        if followed_user
+          followed_user.update(status: :friend) if followed_user.status != "friend"
+        else
+          FollowedUser.create(user_id: follower_id, account_id: self.id, status:"friend", checked: true)
         end
       end
     end
