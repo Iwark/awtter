@@ -96,6 +96,17 @@
             | しない
     .form-group.mt10
       .col-sm-3
+        = f.label :auto_refollow, class: 'control-label'
+      .col-sm-9
+        .btn-group.btn-toggle data-toggle="buttons"
+          label.btn.btn-default
+            = f.radio_button :auto_refollow, true
+            | する
+          label.btn.btn-default
+            = f.radio_button :auto_refollow, false
+            | しない
+    .form-group.mt10
+      .col-sm-3
         = f.label :tag_list, class: 'control-label'
       .col-sm-9
         .tags

@@ -2,28 +2,31 @@
 #
 # Table name: accounts
 #
-#  id                  :integer          not null, primary key
-#  name                :string(255)
-#  api_key             :string(255)
-#  api_secret          :string(255)
-#  access_token        :string(255)
-#  access_token_secret :string(255)
-#  description         :string(255)
-#  group_id            :integer
-#  created_at          :datetime
-#  updated_at          :datetime
-#  pattern             :integer
-#  follower_num        :integer          default(0)
-#  follow_num          :integer          default(0)
-#  followed_at         :datetime         default(2014-12-02 01:25:53 UTC)
-#  unfollowed_at       :datetime         default(2014-12-02 01:25:53 UTC)
-#  auto_retweet        :boolean          default(FALSE)
-#  auto_retweeted_at   :datetime         default(2014-12-03 06:55:17 UTC)
-#  auto_tweeted_at     :datetime         default(2014-12-04 10:24:06 UTC)
-#  auto_tweet          :boolean          default(FALSE)
-#  target_id           :integer
-#  auto_follow         :boolean          default(TRUE)
-#  auto_unfollow       :boolean          default(TRUE)
+#  id                       :integer          not null, primary key
+#  name                     :string(255)
+#  api_key                  :string(255)
+#  api_secret               :string(255)
+#  access_token             :string(255)
+#  access_token_secret      :string(255)
+#  description              :string(255)
+#  group_id                 :integer
+#  created_at               :datetime
+#  updated_at               :datetime
+#  pattern                  :integer
+#  follower_num             :integer          default(0)
+#  follow_num               :integer          default(0)
+#  followed_at              :datetime         default(2014-12-04 00:20:57 UTC)
+#  unfollowed_at            :datetime         default(2014-12-04 00:20:57 UTC)
+#  auto_retweet             :boolean          default(FALSE)
+#  auto_retweeted_at        :datetime         default(2014-12-04 00:20:57 UTC)
+#  auto_tweeted_at          :datetime         default(2014-12-07 06:27:11 UTC)
+#  auto_tweet               :boolean          default(FALSE)
+#  target_id                :integer
+#  auto_follow              :boolean          default(TRUE)
+#  auto_unfollow            :boolean          default(TRUE)
+#  auto_retweet_target      :string(255)
+#  target_auto_retweeted_at :datetime         default(2015-01-01 06:31:46 UTC)
+#  auto_refollow            :boolean          default(FALSE)
 #
 
 class Account < ActiveRecord::Base
@@ -41,7 +44,7 @@ class Account < ActiveRecord::Base
   # targetのあるアカウントをn個取得する
   scope :next_follow_accounts, -> n=30 {
     where(auto_follow: true).
-    where.not(target: ["", nil]).
+    where.not(target_id: Target.by_status(:following).ids).
     where(arel_table[:followed_at].lt 66.minutes.ago).
     order(:followed_at).
     limit(n)
@@ -91,131 +94,104 @@ class Account < ActiveRecord::Base
 
   # ターゲットを10人までfollowする
   def follow_target_users(target, n=10)
+
+    # クライアントの取得
     client = self.get_client
-    get_follow_count(client)
-    get_followers_count(client)
-    
-    if self.target.status == "finished"
-      puts "#{self.name} canceled following because target status is finished."
-      self.followed_at = DateTime.now
-      self.save
-      return []
-    end
 
-    if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1 - 10
-      puts "#{self.name} is under the 1.1 rule."
-      self.followed_at = DateTime.now
-      self.save
-      return []
-    end
+    # ユーザー情報の取得
+    self_user = get_user(client, self.name)
+    return [] unless self_user
 
-    # ユーザーの取得
-    user = get_user(client, target)
-    return [] unless user
-    
-    # フォロワーの取得
-    follower_ids = nil
-    begin
-      follower_ids = client.follower_ids(user, count: 5000)
-    rescue => e
-      $stderr.puts "finding follower_ids of #{self.name} target(#{target}) error:#{e}"
-      return []
-    ensure
-    end
+    self_friend_ids = get_friend_ids(client, self_user)
+    self_follower_ids = get_follower_ids(client, self_user)
+    return [] unless self_friend_ids || self_follower_ids
 
-    followers = follower_ids.to_a.shuffle!
-    followed = follow_users(client, followers, n)
+    # フォロー数とフォロワー数の調整
+    self.follow_num = self_friend_ids.length
+    self.follower_num = self_follower_ids.length
     self.followed_at = DateTime.now
     self.save
-    followed
+
+    # 1.1 rule
+    if self.follow_num > 2000 && self.follow_num > self.follower_num * 1.1 - 10
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} is under the 1.1 rule."
+      return []
+    end
+
+    # 片思われの取得
+    one_side_follower_ids = get_one_side_follower_ids(self_friend_ids, self_follower_ids)
+
+    # ターゲット情報の取得
+    target_user = get_user(client, target)
+    return [] unless target_user
+
+    target_follower_ids = get_follower_ids(client, target_user)
+    return [] unless target_follower_ids
+
+    # フォローしにいく対象（自動フォロー返しがtrueなら先に行う）
+    follow_targets = target_follower_ids
+    follow_targets = (one_side_follower_ids + follow_targets).uniq if self.auto_refollow
+
+    follow_users(client, follow_targets, n)
   end
 
   # 48時間以上経ってフォロバの無いアカウントはフォローを削除する
   def unfollow_users(n=15)
-    unfollowed = []
+
     client = self.get_client
 
-    friend_ids = []
-    follower_ids = []
-
+    # ユーザー情報の取得
     user = get_user(client, self.name)
+    return [] unless user
 
-    begin
-      friend_ids = client.friend_ids(user).to_a
-    rescue => e
-      $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
-      self.update(unfollowed_at: DateTime.now)
-      return []
-    ensure
-    end
+    friend_ids = get_friend_ids(client, user)
+    follower_ids = get_follower_ids(client, user)
+    return [] unless friend_ids || follower_ids
 
-    begin
-      follower_ids = client.follower_ids(user).to_a
-    rescue => e
-      $stderr.puts "#{self.name} failed to get info to unfollow users error:#{e}"
-      self.update(unfollowed_at: DateTime.now)
-      return []
-    ensure
-    end
+    # フォロー数とフォロワー数の調整
+    self.follow_num = friend_ids.length
+    self.follower_num = follower_ids.length
+    self.unfollowed_at = DateTime.now
+    self.save
 
-    # 片想われの検出
-    i = 0
-    follower_ids.each do |follower_id|
-      followed_user = FollowedUser.find_by(user_id: follower_id, account_id: self.id)
-      if !followed_user && !friend_ids.include?(follower_id)
-        if i < 3
-          if user = get_user(client, follower_id)
-            FollowedUser.create(user_id: follower_id, name: user.screen_name, account_id: self.id, status:"follower", checked: true)
-            i += 1
-          else
-            FollowedUser.create(user_id: follower_id, account_id: self.id, status:"deleted", checked: true)
-          end
-        end
-      elsif friend_ids.include?(follower_id)
-        if followed_user
-          followed_user.update(status: :friend) if followed_user.status != "friend"
-        else
-          FollowedUser.create(user_id: follower_id, account_id: self.id, status:"friend", checked: true)
-        end
-      end
-    end
+    unfollowed = []
 
-    self.followed_users.old_ones.followed_or_not_checked.limit(n).each do |user|
-      
+    # 48時間以上経って、フォロバの無いアカウント
+    self.followed_users.old_ones.followed_or_not_checked.limit(n).each do |followed_user|
+
       # フォロー中かどうか
-      is_friend = friend_ids.include?(user.user_id.to_i)
+      is_friend = friend_ids.include?(followed_user.user_id.to_i)
 
       # フォロー中でなければ、リストから削除
       unless is_friend
-        user.status = :deleted 
-        user.checked = true
-        user.save
+        followed_user.status = :deleted 
+        followed_user.checked = true
+        followed_user.save
         next
       end
 
       # フォロワーかどうか
-      is_follower = follower_ids.include?(user.user_id.to_i)
+      is_follower = follower_ids.include?(followed_user.user_id.to_i)
 
+      # フォロワーでなければ、フォローを解除
       unless is_follower
-        # フォロー解除
         begin
-          client.unfollow(user.user_id.to_i)
+          client.unfollow(followed_user.user_id.to_i)
         rescue => e
-          $stderr.puts "#{self.name} unfollow #{user.user_id} failed:#{e}"
+          $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} unfollow #{user.user_id} failed:#{e}"
           next
         ensure
         end
-        user.status = "unfollowed"
-        unfollowed << user
-        user.checked = true
-        user.save
+        followed_user.status = "unfollowed"
+        unfollowed << followed_user
+        followed_user.checked = true
+        followed_user.save
       else
-        user.status = "friend"
-        user.checked = true
-        user.save
+        followed_user.status = "friend"
+        followed_user.checked = true
+        followed_user.save
       end
     end
-    self.update(unfollowed_at: DateTime.now) if unfollowed.length > 0
     unfollowed
   end
 
@@ -225,14 +201,14 @@ class Account < ActiveRecord::Base
     begin
       f = client.follow(user_id.to_i)
     rescue => e
-      $stderr.puts "#{self.name} follow error:#{e}"
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} follow error:#{e}"
     ensure
     end
 
     name = nil
 
     if f.blank? || f[0].id.blank?
-      puts "#{self.name} failed to follow #{u} maybe this account is already followed."
+      puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} failed to follow #{u} maybe this account is already followed."
     else
       name = f[0].name
     end
@@ -254,7 +230,7 @@ class Account < ActiveRecord::Base
     begin
       results = client.search(tag).to_h[:statuses]
     rescue => e
-      $stderr.puts "#{self.name} search tweets failed:#{e}"
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} search tweets failed:#{e}"
       return
     ensure
     end
@@ -319,7 +295,7 @@ class Account < ActiveRecord::Base
         begin
           client.update(result[:text])
         rescue => e
-          $stderr.puts "#{self.name} tweet failed:#{e}"
+          $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} tweet failed:#{e}"
           return
         ensure
         end
@@ -367,39 +343,61 @@ class Account < ActiveRecord::Base
     begin
       client.retweet(retweet.status_id)
     rescue => e
-      $stderr.puts "#{self.name} retweet error:#{e}"
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} retweet error:#{e}"
       return
     ensure
     end
     self.retweets << retweet
   end
 
+
+
   private
 
+  # ユーザーの取得
   def get_user(client, target=nil)
     user = nil
     begin
       user = client.user(target)
     rescue => e
-      $stderr.puts "finding user of #{self.name} target(#{target}) error:#{e}"
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: finding user of #{self.name} target(#{target}) error:#{e}"
       return nil
     ensure
     end
     user
   end
 
-  # フォローの数を取得
-  def get_follow_count(client)
-    user = get_user(client, self.name)
-    return unless user
-    self.follow_num = user.friends_count
+  # フレンドの取得
+  def get_friend_ids(client, user)
+    friend_ids = nil
+    begin
+      friend_ids = client.friend_ids(user).to_a
+    rescue => e
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} failed to get info to unfollow users error:#{e}"
+    ensure
+    end
+    return friend_ids
   end
 
-  # フォロワーの数を取得
-  def get_followers_count(client)
-    user = get_user(client, self.name)
-    return unless user
-    self.follower_num = user.followers_count
+  # フォロワーの取得
+  def get_follower_ids(client, user)
+    follower_ids = nil
+    begin
+      follower_ids = client.follower_ids(user, count: 5000).to_a
+    rescue => e
+      $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: finding follower_ids of #{self.name} target(#{target}) error:#{e}"
+    ensure
+    end
+    return follower_ids
+  end
+
+  # 片思われの取得
+  def get_one_side_follower_ids(friend_ids, follower_ids)
+    one_side_follower_ids = []
+    follower_ids.each do |follower_id|
+      one_side_follower_ids << follower_id if !friend_ids.include?(follower_id)
+    end
+    return one_side_follower_ids
   end
 
   def follow_users(client, users, n)
@@ -425,7 +423,7 @@ class Account < ActiveRecord::Base
       begin
         f = client.follow(u)
       rescue => e
-        $stderr.puts "#{self.name} follow error:#{e}"
+        $stderr.puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} follow error:#{e}"
         return followed if /limit/.match(e.to_s)
       ensure
       end
@@ -433,7 +431,7 @@ class Account < ActiveRecord::Base
       name = nil
 
       if f.blank? || f[0].id.blank?
-        puts "#{self.name} failed to follow #{u} maybe this account is already followed."
+        puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} failed to follow #{u} maybe this account is already followed."
       else
         name = f[0].name
       end
@@ -444,7 +442,7 @@ class Account < ActiveRecord::Base
 
     end
     self.target.update(status: :finished)
-    puts "#{self.name} finished following the target followers."
+    puts "#{DateTime.now.strftime("%m/%d %H:%M")}: #{self.name} finished following the target followers."
     followed
   end
 

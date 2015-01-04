@@ -17,6 +17,7 @@ ja:
         auto_tweet: ツイート自動化
         auto_retweet: リツイート自動化
         auto_retweet_target: 追跡ターゲット
+        auto_refollow: フォロー返し自動化
         tag_list: キーワード
       group:
         name: グループ名

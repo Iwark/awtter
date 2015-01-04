@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150101061738) do
+ActiveRecord::Schema.define(version: 20150104064537) do
 
   create_table "account_retweets", force: true do |t|
     t.integer  "account_id"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20150101061738) do
     t.boolean  "auto_unfollow",            default: true
     t.string   "auto_retweet_target"
     t.datetime "target_auto_retweeted_at", default: '2015-01-01 06:31:46'
+    t.boolean  "auto_refollow",            default: false
   end
 
   add_index "accounts", ["group_id"], name: "index_accounts_on_group_id"

@@ -54,6 +54,6 @@ class AccountsController < ApplicationController
     end
 
     def account_params
-      params.require(:account).permit(:name, :api_key, :api_secret, :access_token, :access_token_secret, :target_id, :description, :group_id, :auto_tweet, :auto_retweet, :tag_list, :auto_follow, :auto_unfollow, :auto_retweet_target)
+      params.require(:account).permit(:name, :api_key, :api_secret, :access_token, :access_token_secret, :target_id, :description, :group_id, :auto_tweet, :auto_retweet, :tag_list, :auto_follow, :auto_unfollow, :auto_retweet_target, :auto_refollow)
     end
 end
