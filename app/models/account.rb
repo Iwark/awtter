@@ -44,7 +44,7 @@ class Account < ActiveRecord::Base
   # targetのあるアカウントをn個取得する
   scope :next_follow_accounts, -> n=30 {
     where(auto_follow: true).
-    where.not(target_id: Target.by_status(:following).ids).
+    where(target_id: Target.by_status(:following).ids).
     where(arel_table[:followed_at].lt 66.minutes.ago).
     order(:followed_at).
     limit(n)
