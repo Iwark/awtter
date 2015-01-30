@@ -25,39 +25,39 @@ set :output, "log/crontab.log"
 set :environment, :production
 
 # ログの同期
-every 1.minutes do
-  rake "cronlog:sync", :output => {:error => 'log/sync.log', :standard => 'log/sync.log'}
-end
+# every 1.minutes do
+#   rake "cronlog:sync", :output => {:error => 'log/sync.log', :standard => 'log/sync.log'}
+# end
 
-every 5.minutes do
+every 6.minutes do
   rake "power:create"
 end
 
 # フォロー
-every 5.minutes do
+every 6.minutes do
   rake "twitter:follow", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # フォロー解除
-every 21.minutes do
+every 22.minutes do
   rake "twitter:unfollow", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # ツイート自動化
-every 8.minutes do
+every 9.minutes do
   rake "twitter:auto_tweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # リツイート
-every 3.minutes do 
+every 4.minutes do 
   rake "twitter:retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
 # リツイート自動化
-every 29.minutes do
+every 30.minutes do
   rake "twitter:auto_retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
 
-every 14.minutes do
+every 15.minutes do
   rake "twitter:target_auto_retweet", :output => {:error => 'log/error.log', :standard => 'log/history.log'}
 end
