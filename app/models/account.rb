@@ -42,7 +42,7 @@ class Account < ActiveRecord::Base
 
   # 前回followしてから66分以上経った、
   # targetのあるアカウントをn個取得する
-  scope :next_follow_accounts, -> n=30 {
+  scope :next_follow_accounts, -> n=3 {
     where(auto_follow: true).
     where(target_id: Target.by_status(:following).ids).
     where(arel_table[:followed_at].lt 66.minutes.ago).
@@ -51,7 +51,7 @@ class Account < ActiveRecord::Base
   }
 
   # 前回unfollowしてから120分以上経ったアカウントをn個取得する
-  scope :next_unfollow_accounts, -> n=30 {
+  scope :next_unfollow_accounts, -> n=3 {
     where(auto_unfollow: true).
     where(arel_table[:unfollowed_at].lt 72.minutes.ago).
     order(:unfollowed_at).
@@ -59,7 +59,7 @@ class Account < ActiveRecord::Base
   }
 
   # 前回tweetしてから7分以上経ったアカウントをn個取得する
-  scope :next_auto_tweet_accounts, -> n=15 {
+  scope :next_auto_tweet_accounts, -> n=3 {
     where(auto_tweet: true).
     where(arel_table[:auto_tweeted_at].lt 7.minutes.ago).
     order(:auto_tweeted_at).
@@ -67,7 +67,7 @@ class Account < ActiveRecord::Base
   }
 
   # 前回auto_retweetしてから3時間以上経ったアカウントをn個取得する
-  scope :next_auto_retweet_accounts, -> n=15 {
+  scope :next_auto_retweet_accounts, -> n=3 {
     where(auto_retweet: true).
     where(arel_table[:auto_retweeted_at].lt 3.hours.ago).
     order(:auto_retweeted_at).
@@ -75,7 +75,7 @@ class Account < ActiveRecord::Base
   }
 
   # 前回target_auto_retweetしてから12時間以上経ったアカウントをn個取得する
-  scope :next_target_auto_retweet_accounts, -> n=15 {
+  scope :next_target_auto_retweet_accounts, -> n=3 {
     where.not(auto_retweet_target: ["", nil]).
     where(arel_table[:target_auto_retweeted_at].lt 12.hours.ago).
     order(:target_auto_retweeted_at).
